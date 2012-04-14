@@ -1,3 +1,4 @@
+package org.foodpantry;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -85,4 +86,10 @@ public class WaitTableModel extends AbstractTableModel {
 		fireTableCellUpdated(row, col);
 	}
 
+	/**-
+	 * Used by the TransferHandler to support reordering.
+	 */
+	public interface Reorderable {
+		   public void reorder(int fromIndex, int toIndex);
+		}
 }

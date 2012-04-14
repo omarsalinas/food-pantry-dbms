@@ -1,3 +1,4 @@
+package org.foodpantry;
 import java.awt.Container;
 
 import javax.swing.BorderFactory;
