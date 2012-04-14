@@ -1,6 +1,7 @@
 import java.awt.Container;
 
 import javax.swing.BorderFactory;
+import javax.swing.DropMode;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,16 +38,20 @@ public class MainUI {
 		WaitTableModel model = new WaitTableModel();
 		// Initialize the family table and add the model to it
 		waitTable = new JTable(model);
+		
 		// Allow the table to support drag and drop
 		// TODO setup the rest of the drag and drop functionality
 		waitTable.setDragEnabled(true);
-		// Create a scrollpane and add the table to it
+		waitTable.setDropMode(DropMode.INSERT_ROWS);
+		waitTable.setTransferHandler(new WaitListTransferHandler(waitTable));
+		
+		// Create and setup a scrollpane, and add the table to it
 		JScrollPane scrollPane = new JScrollPane(waitTable);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(
-				waitTable.getBorder(), "Waitlist",
+				scrollPane.getBorder(), "Waitlist",
 				TitledBorder.LEFT, TitledBorder.TOP));
 		
-		// Add the scrollpane to the pane
+		// Add the scrollpane to the content pane
 		pane.add(scrollPane);
 	}
 	

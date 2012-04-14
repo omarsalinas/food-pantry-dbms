@@ -68,7 +68,7 @@ public class WaitTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		if(col < 2 ) {
+		if(col < this.getColumnCount()-3 ) {
 			return false;
 		} else {
 			return true;
