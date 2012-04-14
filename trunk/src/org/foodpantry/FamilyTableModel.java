@@ -1,3 +1,4 @@
+package org.foodpantry;
 import javax.swing.table.AbstractTableModel;
 
 /**
