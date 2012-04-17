@@ -22,13 +22,13 @@ public class MainUI {
 	 * Value to show if user is logged in.
 	 * Initialized to false, for security.
 	 */
-	private boolean isLoggedIn = false;
+	private static boolean loggedIn = false;
 	
 	/**
 	 * Value to show if user is an administrator
 	 * Initialized to false, for security.
 	 */
-	private boolean isAdministrator = false;
+	private static boolean administrator = false;
 	
 	/**
 	 * Add all of the components to the pane to create the main GUI.
@@ -72,9 +72,14 @@ public class MainUI {
 		// if login succeeds, then add everything to the content pane
 		// else shut 'er down!
 		if(loginDlg.isSucceeded()) {
+			loggedIn = true;
+			if(loginDlg.isAdministrator()) {
+				administrator = true;
+			}
 			//Set up the content pane.
 			addComponentsToPane(frame.getContentPane());
 		} else {
+			loggedIn = false;
 			//Close down the JVM, since nothing is displayed
 			System.exit(0);
 		}
@@ -94,5 +99,13 @@ public class MainUI {
 			}
 			
 		});
+	}
+
+	public static boolean isLoggedIn() {
+		return loggedIn;
+	}
+
+	public static boolean isAdministrator() {
+		return administrator;
 	}
 }
