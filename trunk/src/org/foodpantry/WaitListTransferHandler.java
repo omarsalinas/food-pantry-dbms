@@ -14,9 +14,13 @@ import org.foodpantry.WaitTableModel.Reorderable;;
 
 /**
  * 
- * The main purpose os this class is to handle the drag and drop functionality
+ * The main purpose of this class is to handle the drag and drop functionality
  * within the waitlist.  This should allow the selected row to moved to a new
  * position within the <code>JTable</code>.
+ * 
+ * Code mostly borrowed from:
+ * http://stackoverflow.com/questions/638807/how-do-i-drag-and-drop-a-row-in-a-jtable
+ * http://stackoverflow.com/questions/715332/jtable-drag-and-drop
  *
  */
 public class WaitListTransferHandler extends TransferHandler {

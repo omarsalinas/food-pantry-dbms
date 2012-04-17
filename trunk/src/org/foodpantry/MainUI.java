@@ -16,7 +16,7 @@ public class MainUI {
 	/**
 	 * Table to display the waitlist
 	 */
-	private static JTable waitTable;
+//	private static JTable waitTable;
 	
 	/**
 	 * Value to show if user is logged in.
@@ -38,13 +38,13 @@ public class MainUI {
 		// Create the model for the table
 		WaitTableModel model = new WaitTableModel();
 		// Initialize the family table and add the model to it
-		waitTable = new JTable(model);
+		JTable waitTable = new JTable(model);
 		
 		// Allow the table to support drag and drop
 		// TODO setup the rest of the drag and drop functionality
+		waitTable.setTransferHandler(new WaitListTransferHandler(waitTable));
 		waitTable.setDragEnabled(true);
 		waitTable.setDropMode(DropMode.INSERT_ROWS);
-		waitTable.setTransferHandler(new WaitListTransferHandler(waitTable));
 		
 		// Create and setup a scrollpane, and add the table to it
 		JScrollPane scrollPane = new JScrollPane(waitTable);
@@ -65,8 +65,19 @@ public class MainUI {
 		JFrame frame = new JFrame("Food Pantry");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		//Set up the content pane.
-		addComponentsToPane(frame.getContentPane());
+		// TODO need a cleaner implementation
+		//  Default username/password = bob/secret
+		LoginDialog loginDlg = new LoginDialog(frame);
+		loginDlg.setVisible(true);
+		// if login succeeds, then add everything to the content pane
+		// else shut 'er down!
+		if(loginDlg.isSucceeded()) {
+			//Set up the content pane.
+			addComponentsToPane(frame.getContentPane());
+		} else {
+			//Close down the JVM, since nothing is displayed
+			System.exit(0);
+		}
 
 		//Display the window.
 		frame.pack();
