@@ -35,7 +35,9 @@ public class LoginDialog extends JDialog {
     private JLabel lbPassword;
     private JButton btnLogin;
     private JButton btnCancel;
-    private boolean succeeded;
+    // Initialize these to false, for security
+    private boolean succeeded = false;
+    private boolean administrator = false;
 
     public LoginDialog(Frame parent) {
         super(parent, "Login", true);
@@ -82,6 +84,10 @@ public class LoginDialog extends JDialog {
                             "Login",
                             JOptionPane.INFORMATION_MESSAGE);
                     succeeded = true;
+                    // TODO make this an actual setting...
+                    if (true) {
+                    	administrator = true;
+                    }
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(LoginDialog.this,
@@ -127,5 +133,9 @@ public class LoginDialog extends JDialog {
 
     public boolean isSucceeded() {
         return succeeded;
+    }
+    
+    public boolean isAdministrator() {
+    	return this.administrator;
     }
 }
