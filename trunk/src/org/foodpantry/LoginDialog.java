@@ -25,6 +25,10 @@ import javax.swing.border.LineBorder;
  */
 
 public class LoginDialog extends JDialog {
+	/**
+	 * Generated Serial Version UID
+	 */
+	private static final long serialVersionUID = -2496684384580696427L;
 	private JTextField tfUsername;
     private JPasswordField pfPassword;
     private JLabel lbUsername;
