@@ -3,7 +3,10 @@ import java.awt.Container;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
@@ -31,10 +34,18 @@ public class MainUI {
 	private static boolean administrator = false;
 	
 	/**
+	 * Keep track of the user's name
+	 */
+	private static String username;
+	
+	/**
 	 * Add all of the components to the pane to create the main GUI.
 	 * @param pane
 	 */
 	public static void addComponentsToPane(Container pane) {
+		// Add pane for user/admin/connection info
+		pane.add(createStatusPane());
+		
 		// Create the model for the table
 		WaitTableModel model = new WaitTableModel();
 		// Initialize the family table and add the model to it
@@ -57,6 +68,35 @@ public class MainUI {
 	}
 	
 	/**
+	 * Create a status pane that displays the following
+	 * 	-Welcome message for user
+	 * 	-Connection status to server
+	 *  -Administration button
+	 */
+	private static JPanel createStatusPane() {
+		JPanel statusPane = new JPanel();
+		JLabel user = new JLabel("Welcome, " + username + "!  ");
+		
+		// TODO add connection information
+		JLabel connection = new JLabel("  The Connection is ...  ");
+		
+		statusPane.add(connection);
+		statusPane.add(user);
+		
+		/*
+		 * If the user is an administrator, give them an administration button.
+		 * TODO give button functionality
+		 * TODO create a panel to handle that functionality
+		 */
+		if (isAdministrator()) {
+			JButton administrate = new JButton("Administration");
+			statusPane.add(administrate);
+		}
+		
+		return statusPane; 
+	}
+	
+	/**
 	 * Create and show the main GUI.  Should be implemented
 	 * in a way to provide thread safety.
 	 */
@@ -73,6 +113,7 @@ public class MainUI {
 		// else shut 'er down!
 		if(loginDlg.isSucceeded()) {
 			loggedIn = true;
+			username = loginDlg.getUsername();
 			if(loginDlg.isAdministrator()) {
 				administrator = true;
 			}
@@ -97,7 +138,6 @@ public class MainUI {
 			public void run() {
 				MainUI.createAndShowGUI();
 			}
-			
 		});
 	}
 
