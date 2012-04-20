@@ -1,4 +1,4 @@
-package org.foodpantry;
+package org.foodpantry.ui;
 import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -9,7 +9,7 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
 
-import org.foodpantry.WaitTableModel.Reorderable;;
+import org.foodpantry.ui.WaitTableModel.Reorderable;
 
 
 /**
