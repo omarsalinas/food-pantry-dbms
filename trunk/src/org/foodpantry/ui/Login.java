@@ -1,4 +1,4 @@
-package org.foodpantry;
+package org.foodpantry.ui;
 
 /**
  * Borrowed from:

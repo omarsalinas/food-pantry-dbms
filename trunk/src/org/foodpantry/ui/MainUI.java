@@ -1,4 +1,4 @@
-package org.foodpantry;
+package org.foodpantry.ui;
 import java.awt.Container;
 
 import javax.swing.BorderFactory;
