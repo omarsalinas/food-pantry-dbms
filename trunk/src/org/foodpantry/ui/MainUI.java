@@ -68,7 +68,7 @@ public class MainUI {
 	}
 	
 	/**
-	 * Create a status pane that displays the following -check in test...
+	 * Create a status pane that displays the following
 	 * 	-Welcome message for user
 	 * 	-Connection status to server
 	 *  -Administration button
