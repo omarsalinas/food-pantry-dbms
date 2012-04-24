@@ -1,6 +1,5 @@
 package org.foodpantry.ui;
 import java.awt.Container;
-import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
