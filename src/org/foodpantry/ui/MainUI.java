@@ -1,5 +1,6 @@
 package org.foodpantry.ui;
 import java.awt.Container;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
@@ -9,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -40,11 +42,16 @@ public class MainUI {
 	
 	/**
 	 * Add all of the components to the pane to create the main GUI.
-	 * @param pane
+	 * @param pane - <code>Container</code> the components are being added to.
 	 */
 	public static void addComponentsToPane(Container pane) {
+		//set parent pane to springlayout
+		SpringLayout layout = new SpringLayout();
+		pane.setLayout(layout);
+		
 		// Add pane for user/admin/connection info
-		pane.add(createStatusPane());
+		JPanel status = MainUI.createStatusPane();
+		pane.add(status);
 		
 		// Create the model for the table
 		WaitTableModel model = new WaitTableModel();
@@ -65,6 +72,33 @@ public class MainUI {
 		
 		// Add the scrollpane to the content pane
 		pane.add(scrollPane);
+		
+		/*
+		 * set the contraints on the layout of the elements
+		 */
+		// Standard padding for the elements
+		int padding = 5;
+		// constraints on the placement of the status bar
+		layout.putConstraint(SpringLayout.WEST, status,
+							 padding,
+							 SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, status,
+							 padding,
+							 SpringLayout.NORTH, pane);
+		// constraints on the scrollpane
+		layout.putConstraint(SpringLayout.WEST, scrollPane,
+							 padding,
+							 SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, scrollPane,
+							 padding, 
+							 SpringLayout.SOUTH, status);
+		// constraints on the main contentpane
+		layout.putConstraint(SpringLayout.EAST, pane, 
+							 padding, 
+							 SpringLayout.EAST, scrollPane);
+		layout.putConstraint(SpringLayout.SOUTH, pane,
+							 padding, 
+							 SpringLayout.SOUTH, scrollPane);
 	}
 	
 	/**
