@@ -7,19 +7,19 @@ public class DBConnection {
 
 	public static void main(String[] args) {
 		Connection conn = null;
-		String url = "jdbc:mysql://triton.towson.edu:3306/marbau1/";
-		String dbName = "";
+		String url = "jdbc:mysql://mysql1007.ixwebhosting.com:3306/";
+		String dbName = "C242386_foodpantry";
 		String driver = "com.mysql.jdbc.Driver";
-		String userName = "marbau1"; 
-		String password = "";
+		String userName = "C242386_group"; 
+		String password = "Cosc578";
 
 		try {
-			System.out.println("Connecting to Triton");
+			System.out.println("Connecting to Database");
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(url+dbName,userName,password);
-			System.out.println("Connected to mysql on Triton");
+			System.out.println("Connected to mysql on Server");
 			conn.close();
-			System.out.println("Disconnected from Triton");
+			System.out.println("Disconnected from Database");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
