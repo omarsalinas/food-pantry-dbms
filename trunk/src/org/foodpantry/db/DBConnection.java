@@ -21,6 +21,7 @@ public class DBConnection {
 			conn.close();
 			System.out.println("Disconnected from Database");
 		} catch (Exception e) {
+			System.err.println("Failed to Connect to Datatbase");
 			e.printStackTrace();
 		}
 	}
