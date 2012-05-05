@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -78,28 +80,36 @@ public class LoginDialog extends JDialog {
         btnLogin.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (Login.authenticate(getUsername(), getPassword())) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Hi " + getUsername() + "! You have successfully logged in.",
-                            "Login",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    succeeded = true;
-                    // TODO make this an actual setting...
-                    if (true) {
-                    	administrator = true;
-                    }
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Invalid username or password",
-                            "Login",
-                            JOptionPane.ERROR_MESSAGE);
-                    // reset username and password
-                    tfUsername.setText("");
-                    pfPassword.setText("");
-                    succeeded = false;
+                try {
+					if (Login.authenticate(getUsername(), getPassword())) {
+					    JOptionPane.showMessageDialog(LoginDialog.this,
+					            "Hi " + getUsername() + "! You have successfully logged in.",
+					            "Login",
+					            JOptionPane.INFORMATION_MESSAGE);
+					    succeeded = true;
+					    // TODO make this an actual setting...
+					    if (true) {
+					    	administrator = true;
+					    }
+					    dispose();
+					} else {
+					    JOptionPane.showMessageDialog(LoginDialog.this,
+					            "Invalid username or password",
+					            "Login",
+					            JOptionPane.ERROR_MESSAGE);
+					    // reset username and password
+					    tfUsername.setText("");
+					    pfPassword.setText("");
+					    succeeded = false;
 
-                }
+					}
+				} catch (HeadlessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
         btnCancel = new JButton("Cancel");
