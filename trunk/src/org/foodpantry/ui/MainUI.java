@@ -12,6 +12,8 @@ import javax.swing.JTable;
 import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
+import org.foodpantry.db.DBConnection;
+
 /**
  * The main GUI.
  */
@@ -44,6 +46,7 @@ public class MainUI {
 	 * @param pane - <code>Container</code> the components are being added to.
 	 */
 	public static void addComponentsToPane(Container pane) {
+		
 		//set parent pane to springlayout
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
@@ -52,8 +55,12 @@ public class MainUI {
 		JPanel status = MainUI.createStatusPane();
 		pane.add(status);
 		
+		//Create Connection Database
+		DBConnection dbConnection = new DBConnection();
+		Database database = new Database(dbConnection.getDBConnection());
+		
 		// Create the model for the table
-		WaitTableModel model = new WaitTableModel();
+		WaitTableModel model = new WaitTableModel(database);
 		// Initialize the family table and add the model to it
 		JTable waitTable = new JTable(model);
 		

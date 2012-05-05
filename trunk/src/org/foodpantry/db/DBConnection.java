@@ -39,6 +39,13 @@ public class DBConnection {
 	}
 	
 	/**
+	 * get DBConnection
+	 */
+	public Connection getDBConnection(){
+		return connection;
+	}
+	
+	/**
 	 * closeConnection method used to close the connection to the database
 	 */
 	public void closeConnection(){
