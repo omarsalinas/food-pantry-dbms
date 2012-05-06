@@ -7,8 +7,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
@@ -149,6 +151,40 @@ public class MainUI {
 	
 		return statusPane; 
 	}
+	
+	/**
+	 * Create a pane that allows users to be added
+	 */
+	private static JPanel adminAddUserPane() {
+		JPanel addUserPane = new JPanel();
+
+	    JTextField usernameTextField = new JTextField();
+	    addUserPane.add(usernameTextField);
+		
+		JPasswordField passwordField = new JPasswordField(10);
+		addUserPane.add(passwordField);
+		
+		JButton addUserButton = new JButton("Add User");
+		addUserPane.add(addUserButton);
+		
+		return addUserPane; 
+	}
+	
+	/**
+	 * Create a pane that allows users to be deleted
+	 */
+	private static JPanel adminDeleteUserPane() {
+		JPanel deleteUserPane = new JPanel();
+
+	    JTextField usernameTextField = new JTextField();
+	    deleteUserPane.add(usernameTextField);
+		
+		JButton deleteUserButton = new JButton("Delete User");
+		deleteUserPane.add(deleteUserButton);
+		
+		return deleteUserPane; 
+	}
+	
 	
 	/**
 	 * Create a status pane that displays the following
