@@ -51,13 +51,20 @@ public class MainUI {
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
 		
+		//Create Connection Database
+		DBConnection dbConnection = new DBConnection();
+		Database database = new Database(dbConnection.getDBConnection());
+		
 		// Add pane for user/admin/connection info
 		JPanel status = MainUI.createStatusPane();
 		pane.add(status);
 		
-		//Create Connection Database
-		DBConnection dbConnection = new DBConnection();
-		Database database = new Database(dbConnection.getDBConnection());
+		//Button to add a family to the list
+		//will work on more later, lynn
+		/*JPanel addFamilyPane = new JPanel();
+		JButton addFamilyButton = new JButton("Add Family To List");
+		addFamilyPane.add(addFamilyButton);
+		pane.add(addFamilyPane);*/
 		
 		// Create the model for the table
 		WaitTableModel model = new WaitTableModel(database);
@@ -132,8 +139,21 @@ public class MainUI {
 			JButton administrate = new JButton("Administration");
 			statusPane.add(administrate);
 		}
-		
+	
 		return statusPane; 
+	}
+	
+	/**
+	 * Create a status pane that displays the following
+	 * 	-"Add Family to List" button
+	 */
+	private static JPanel addFamilyPane() {
+		JPanel familyPane = new JPanel();
+
+		JButton addFamilyButton = new JButton("Add Family To List");
+		familyPane.add(addFamilyButton);
+	
+		return familyPane; 
 	}
 	
 	/**

@@ -19,36 +19,56 @@ public class WaitTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private Database database = null;
+	
 	/**
 	 * Date for the list
 	 **/
 	private Date listDate;
 
+	/**
+	 * The names of titles of each column.
+	 */
 	private List<String> columnNames = new ArrayList<String>();
 
+	/**
+	 * A list of the class ListData which contains the data for each row.
+	 */
 	private List<ListData> listData = new ArrayList<ListData>();
 	
 	class ListData{
-		int order;
-		String name;
-		int numberInGroup;
+		int orderNumber;
+		int familyNumber;
+//		int numberInGroup;
 		List<Boolean> stations;
 		
-		ListData(int order, String name, int number, List<Boolean> stations){
-			this.order = order;
-			this.name = name;
-			this.numberInGroup = number;
+		ListData(int order, int familyNumber, List<Boolean> stations){
+			this.orderNumber = order;
+			this.familyNumber = familyNumber;
+//			this.numberInGroup = number;
 			this.stations = stations;
 		}
 		
 		private Object getColumn(int col){
 			switch(col){
 			case 0:
-				return this.order;
-			case 1:
-				return this.name;
+				return this.orderNumber;
+			case 1:				
+				try {
+					return database.getFamilyLastName(this.familyNumber);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return "error";
+				}
 			case 2:
-				return this.numberInGroup;
+				try {
+					return database.getNoInFamily(this.familyNumber);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return "error";
+				}
 			default:
 				if(this.stations != null && this.stations.toArray().length >= (col - 3))
 					return this.stations.toArray()[(col - 3)];
@@ -59,25 +79,45 @@ public class WaitTableModel extends AbstractTableModel {
 		private void setColumn(int col, Object value){
 			switch(col){
 			case 0:
-				this.order = (Integer) value;
+				this.orderNumber = (Integer) value;
 				break;
 			case 1:
-				this.name = (String) value;
+				//this.familyNumber = (Integer) value;
 				break;
 			case 2:
-				this.numberInGroup = (Integer) value;
+				//this.numberInGroup = (Integer) value;
 				break;
 			default:
-				if(this.stations != null && this.stations.toArray().length >= (col - 3))
-					this.stations.toArray()[(col - 3)] = (Boolean) value;
+				if(this.stations != null && this.stations.toArray().length >= (col - 3)){
+					Iterator<Boolean> stationIterator = this.stations.iterator();
+					List<Boolean> newStationList = new ArrayList<Boolean>();
+					int count = 3;
+					Boolean bool;
+					while(stationIterator.hasNext()){
+						bool = stationIterator.next();
+						if(count == col){
+							//database.updateStationRecord(this.familyNumber, (String) columnNames.toArray()[col], listDate, (Boolean) value);
+							newStationList.add((Boolean) value);
+							System.out.println(columnNames.toArray()[col]);
+							
+						}
+						else{
+							newStationList.add(bool); 
+						}
+						count++;
+					}
+					this.stations.clear();
+					this.stations = newStationList;
+				}
 			} 
 		}		
 	}
 	
-	WaitTableModel(Database database){
-		//I am having trouble finding a good way to enter the 
+	WaitTableModel(Database db){
+		//TODO I am having trouble finding a good way to enter the 
 		//date into the database. -Lynn
-		refeshList(database);	
+		this.database = db;
+		refeshList(this.database);	
 	}
 
 	public void refeshList(Database database){
@@ -111,10 +151,13 @@ public class WaitTableModel extends AbstractTableModel {
 			if(numbers != null){
 				Iterator<Integer> numbersIterator = numbers.iterator();
 				while(numbersIterator.hasNext()){
-					int familyNumber = numbersIterator.next();
-					int number = numbersIterator.next();
-					String LastName = database.getFamilyLastName(familyNumber);
 					
+					
+					int familyNumber = numbersIterator.next();
+					int orderNumber = numbersIterator.next();
+					//String LastName = database.getFamilyLastName(familyNumber);
+					
+					//Get Station Check List.
 					List<Boolean> stationCheck = new ArrayList<Boolean>();
 					List<String> station = new ArrayList<String>();
 					station = database.getStationsFamilyVisit(listDate, familyNumber);
@@ -132,7 +175,7 @@ public class WaitTableModel extends AbstractTableModel {
 						}
 					}
 					
-					ListData data = new ListData(familyNumber, LastName, number, stationCheck);
+					ListData data = new ListData(orderNumber, familyNumber, stationCheck);
 					listData.add(data);
 				}
 			}
@@ -214,9 +257,10 @@ public class WaitTableModel extends AbstractTableModel {
 	public void setValueAt(Object value, int row, int col) {
 		ListData data = (ListData) listData.toArray()[row];
 		data.setColumn(col, value);
+		listData.toArray()[row] = data;
 	}
 
-	/**-
+	/**
 	 * Used by the TransferHandler to support reordering.
 	 */
 	public interface Reorderable {
