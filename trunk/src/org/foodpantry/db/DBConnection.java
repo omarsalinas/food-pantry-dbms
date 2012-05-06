@@ -88,6 +88,21 @@ public class DBConnection {
 	}
 	
 	/**
+	 * Method used to check on the db connection status
+	 * @return - True if connection is valid, otherwise false
+	 */
+	public boolean activeConnection(){
+		boolean active = false;
+		try {
+			active = connection.isValid(10);
+		} catch (SQLException e) {
+			System.err.println("Failed to check dbconnection status");
+			e.printStackTrace();
+		}
+		return active;
+	}
+	
+	/**
 	  Main Method used to locally test a database connection
 	  @param args
 	 */
