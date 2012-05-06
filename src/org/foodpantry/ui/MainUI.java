@@ -41,6 +41,8 @@ public class MainUI {
 	 */
 	private static String username;
 	
+	private static DBConnection dbConnection;
+	
 	/**
 	 * Add all of the components to the pane to create the main GUI.
 	 * @param pane - <code>Container</code> the components are being added to.
@@ -52,7 +54,7 @@ public class MainUI {
 		pane.setLayout(layout);
 		
 		//Create Connection Database
-		DBConnection dbConnection = new DBConnection();
+		dbConnection = new DBConnection();
 		Database database = new Database(dbConnection.getDBConnection());
 		
 		// Add pane for user/admin/connection info
@@ -123,9 +125,14 @@ public class MainUI {
 	private static JPanel createStatusPane() {
 		JPanel statusPane = new JPanel();
 		JLabel user = new JLabel("Welcome, " + username + "!  ");
-		
-		// TODO add connection information
-		JLabel connection = new JLabel("  The Connection is ...  ");
+		JLabel connection;
+
+		if (dbConnection.activeConnection() == true){
+			connection = new JLabel("  The Connection is active  ");
+		}
+		else{
+			connection = new JLabel("  The Connection is disabled  ");			
+		}
 		
 		statusPane.add(connection);
 		statusPane.add(user);
