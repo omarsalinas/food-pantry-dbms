@@ -169,5 +169,10 @@ public class AdminUI {
 				 padding,SpringLayout.WEST, pane);
 		layout.putConstraint(SpringLayout.NORTH, deleteUser,
 				 padding, SpringLayout.SOUTH, deleteLabel);
+		// Constrain the pane to the internal elements
+		layout.putConstraint(SpringLayout.SOUTH, pane,
+				 padding, SpringLayout.SOUTH, deleteUser);
+		layout.putConstraint(SpringLayout.EAST, pane,
+				 padding, SpringLayout.EAST, addUser);
 	}
 }
