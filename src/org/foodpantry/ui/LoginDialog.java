@@ -20,10 +20,9 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 /**
- * 
  * Borrowed from:
  * http://www.javaswing.org/jdialog-login-dialog-example.aspx
- *
+ * TODO need functionality for a database connection timeout
  */
 
 public class LoginDialog extends JDialog {
