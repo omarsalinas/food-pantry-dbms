@@ -2,6 +2,8 @@ package org.foodpantry.ui;
 
 import java.awt.Container;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,7 +17,7 @@ import javax.swing.border.TitledBorder;
  * Window that lets the user choose someone to add to the waitlist.
  * TODO needs to enforce that family credentials are good before adding
  */
-public class SelectFamilyForWaitlistUI extends JFrame {
+public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 
 	/**
 	 * Generated Serial Version UID
@@ -83,6 +85,12 @@ public class SelectFamilyForWaitlistUI extends JFrame {
 				 SpringLayout.SOUTH, addFamily);
 		
 		this.pack();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
