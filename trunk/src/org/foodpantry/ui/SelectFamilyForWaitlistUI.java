@@ -11,6 +11,10 @@ import javax.swing.JTable;
 import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
+/**
+ * Window that lets the user choose someone to add to the waitlist.
+ * TODO needs to enforce that family credentials are good before adding
+ */
 public class SelectFamilyForWaitlistUI extends JFrame {
 
 	/**
