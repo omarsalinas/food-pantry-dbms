@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -135,10 +136,38 @@ public class AdminUI {
 		pane.setLayout(layout);
 		// Add pane for admin actions
 		JPanel addUser = AdminUI.adminAddUserPane();
+		JLabel addLabel = new JLabel();
+		addLabel.setText("Add User:");
 		pane.add(addUser);
+		pane.add(addLabel);
 
-		//JPanel deleteUser = AdminUI.adminDeleteUserPane();
-		//pane.add(deleteUser);
+		JPanel deleteUser = AdminUI.adminDeleteUserPane();
+		JLabel deleteLabel = new JLabel();
+		deleteLabel.setText("Delete User:");
+		pane.add(deleteUser);
+		pane.add(deleteLabel);
 		
+		// Standard padding for the elements
+		int padding = 5;
+		// constraints on the placement of the status bar
+		layout.putConstraint(SpringLayout.WEST, addLabel,
+				 padding,SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, addLabel,
+				 padding,SpringLayout.NORTH, pane);
+		
+		layout.putConstraint(SpringLayout.WEST, addUser,
+				 padding,SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, addUser,
+				 padding,SpringLayout.SOUTH, addLabel);
+
+		layout.putConstraint(SpringLayout.WEST, deleteLabel,
+				 padding,SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, deleteLabel,
+				 padding,SpringLayout.SOUTH, addUser);
+		
+		layout.putConstraint(SpringLayout.WEST, deleteUser,
+				 padding,SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, deleteUser,
+				 padding, SpringLayout.SOUTH, deleteLabel);
 	}
 }
