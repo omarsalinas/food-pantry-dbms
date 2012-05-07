@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 /**
  * Borrowed from:
  * http://www.javaswing.org/jdialog-login-dialog-example.aspx
+ * TODO need functionality for a database connection timeout
  */
 
 public class Login {
