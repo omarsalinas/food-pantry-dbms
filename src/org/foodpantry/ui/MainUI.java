@@ -1,5 +1,8 @@
 package org.foodpantry.ui;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
@@ -7,10 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
@@ -49,9 +50,8 @@ public class MainUI {
 	 * Add all of the components to the pane to create the main GUI.
 	 * @param pane - <code>Container</code> the components are being added to.
 	 */
-	public static void addComponentsToPane(Container pane) {
-		
-		//set parent pane to springlayout
+	public static void addComponentsToPane(Container pane) {		
+		//set parent pane layout to springlayout
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
 		
@@ -64,11 +64,8 @@ public class MainUI {
 		pane.add(status);
 		
 		//Button to add a family to the list
-		//will work on more later, lynn
-		/*JPanel addFamilyPane = new JPanel();
-		JButton addFamilyButton = new JButton("Add Family To List");
-		addFamilyPane.add(addFamilyButton);
-		pane.add(addFamilyPane);*/
+		JPanel addFamily = MainUI.addFamilyPane();
+		pane.add(addFamily);
 		
 		// Create the model for the table
 		WaitTableModel model = new WaitTableModel(database);
@@ -91,7 +88,14 @@ public class MainUI {
 		pane.add(scrollPane);
 		
 		/*
-		 * set the contraints on the layout of the elements
+		 * set the constraints on the layout of the elements
+		 * +-------------+
+		 * |status       |
+		 * |-------------|
+		 * |addFamily    |
+		 * |-------------|
+		 * |scrollpane   |
+		 * +-------------+
 		 */
 		// Standard padding for the elements
 		int padding = 5;
@@ -102,13 +106,20 @@ public class MainUI {
 		layout.putConstraint(SpringLayout.NORTH, status,
 							 padding,
 							 SpringLayout.NORTH, pane);
+		// constraints on the addFamilyPane
+		layout.putConstraint(SpringLayout.WEST, addFamily,
+				 padding,
+				 SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, addFamily,
+				 padding, 
+				 SpringLayout.SOUTH, status);
 		// constraints on the scrollpane
 		layout.putConstraint(SpringLayout.WEST, scrollPane,
 							 padding,
 							 SpringLayout.WEST, pane);
 		layout.putConstraint(SpringLayout.NORTH, scrollPane,
 							 padding, 
-							 SpringLayout.SOUTH, status);
+							 SpringLayout.SOUTH, addFamily);
 		// constraints on the main contentpane
 		layout.putConstraint(SpringLayout.EAST, pane, 
 							 padding, 
@@ -162,6 +173,9 @@ public class MainUI {
 		JPanel familyPane = new JPanel();
 
 		JButton addFamilyButton = new JButton("Add Family To List");
+		addFamilyButton.addActionListener(new openWindow());
+		addFamilyButton.setActionCommand("Add Family");
+		addFamilyButton.setMnemonic(KeyEvent.VK_A);
 		familyPane.add(addFamilyButton);
 	
 		return familyPane; 
@@ -175,7 +189,8 @@ public class MainUI {
 		//Create and set up the window.
 		JFrame frame = new JFrame("Food Pantry");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		// TODO set a function that closes the database connection
+		
 		// TODO need a cleaner implementation
 		//  Default username/password = bob/secret
 		LoginDialog loginDlg = new LoginDialog(frame);
@@ -219,4 +234,19 @@ public class MainUI {
 	public static boolean isAdministrator() {
 		return administrator;
 	}
+
+}
+
+class openWindow implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals("Add Family")) {
+			JFrame window = new SelectFamilyForWaitlistUI();
+			window.pack();
+			window.setVisible(true);
+		}
+		
+	}
+	
 }
