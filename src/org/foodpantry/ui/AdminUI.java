@@ -1,12 +1,15 @@
 package org.foodpantry.ui;
 
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 
 import org.foodpantry.db.DBConnection;
 
@@ -18,7 +21,7 @@ public class AdminUI {
 	private static JPanel adminAddUserPane() {
 		JPanel addUserPane = new JPanel();
 
-		final JTextField usernameTextField = new JTextField();
+		final JTextField usernameTextField = new JTextField(10);
 		addUserPane.add(usernameTextField);
 
 		final JPasswordField passwordField = new JPasswordField(10);
@@ -65,7 +68,7 @@ public class AdminUI {
 	private static JPanel adminDeleteUserPane() {
 		JPanel deleteUserPane = new JPanel();
 
-		final JTextField usernameTextField = new JTextField();
+		final JTextField usernameTextField = new JTextField(10);
 		deleteUserPane.add(usernameTextField);
 
 		JButton deleteUserButton = new JButton("Delete User");
@@ -103,5 +106,39 @@ public class AdminUI {
 
 		return deleteUserPane;
 	}
+	
+	public static void main(String[] args) {
+		// Invoke the thread with 
+		// Create and show the main GUI
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				AdminUI.createAndShowGUI();
+			}
+		});
+	}
 
+	protected static void createAndShowGUI() {
+		//Create and set up the window.
+		JFrame frame = new JFrame("Administrative Services");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//Set up the content pane.
+		addComponentsToPane(frame.getContentPane());
+		//Display the window.
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	private static void addComponentsToPane(Container pane) {
+		//set parent pane to springlayout
+		SpringLayout layout = new SpringLayout();
+		pane.setLayout(layout);
+		// Add pane for admin actions
+		JPanel addUser = AdminUI.adminAddUserPane();
+		pane.add(addUser);
+
+		//JPanel deleteUser = AdminUI.adminDeleteUserPane();
+		//pane.add(deleteUser);
+		
+	}
 }
