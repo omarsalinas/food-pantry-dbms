@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -41,7 +42,7 @@ public class AdminUI {
 		adminBox.setSelected(false);
 		addUserPane.add(adminBox);
 		
-		JButton addUserButton = new JButton("Add User");
+		final JButton addUserButton = new JButton("Add User");
 		addUserButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -83,8 +84,12 @@ public class AdminUI {
 					conn.closeConnection();
 				}
 				else {
-					// TODO - display error say a user name and password must be entered to add
+					//display error say a user name and password must be entered to add
 					System.err.println("Username and Password cannot be blank");
+					JOptionPane.showMessageDialog(
+						    addUserButton, "Username and Password must be entered to add a new user.",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 			
 			}
