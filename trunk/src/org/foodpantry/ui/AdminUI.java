@@ -126,54 +126,12 @@ public class AdminUI {
 	 * Create a pane that allows users to be added
 	 */
 	private static JPanel adminModifyUserPane() {
-		JPanel addUserPane = new JPanel();
-
-		// Add user label
-		JLabel addLabel = new JLabel();
-		addLabel.setText("Add User:");
-		addUserPane.add(addLabel);
+		JPanel modifyUserPane = new JPanel();
 		
-		// Add user name text field
-		final JTextField usernameTextField = new JTextField(10);
-		addUserPane.add(usernameTextField);
-
-		// Add user name password field
-		final JPasswordField passwordField = new JPasswordField(10);
-		addUserPane.add(passwordField);
-
-		JButton addUserButton = new JButton("Add User");
-		addUserButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (usernameTextField.getText() != null && passwordField.getPassword() != null) {
-					String insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() + "', '" + passwordField.getPassword().toString() +"')";
-					
-					// create connection to database
-					DBConnection conn = new DBConnection();
-
-					// proceed only if connection was successful
-					if (conn.Success) {
-						// execute delete
-						boolean insert = conn.executeUpdate(insertStmt);
-						if (insert == true) {
-							System.out.println("User was added.");
-						} else {
-							System.err.println("User was not added.");
-						}
-					}
-					// close connection
-					conn.closeConnection();
-				}
-				else {
-					// TODO - display error say a user name and password must be entered to add
-				}
-			
-			}
-		});
-		addUserPane.add(addUserButton);
-
-		return addUserPane;
+		//Scroll Pane
+		
+		
+		return modifyUserPane;
 	}
 	
 	public static void main(String[] args) {
