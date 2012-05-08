@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,7 +45,13 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
 		
-		FamilyTableModel model = new FamilyTableModel();
+		FamilyTableModel model = null;
+		try {
+			model = new FamilyTableModel();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		JTable table = new JTable(model);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(
