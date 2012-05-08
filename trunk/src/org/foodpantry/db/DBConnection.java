@@ -13,6 +13,7 @@ public class DBConnection {
 	 * Constructor for DBConnection which create a connection to the database
 	 */
 	public DBConnection(){
+//		String url = "jdbc:mysql://localhost:3306/";
 		String url = "jdbc:mysql://mysql1007.ixwebhosting.com:3306/";
 		String dbName = "C242386_foodpantry";
 		String driver = "com.mysql.jdbc.Driver";
