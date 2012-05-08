@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,13 +37,26 @@ public class AddFamilyUI {
 	static JTextField zipTF;
 	
 	static Connection conn;
+	static java.sql.Date todaysDate = getTodaysDate(5, 4, 2012);
+	static JFrame frame;
+
 	
 	//TODO get connection
 	/**AddFamilyUI(){
 		//this.conn = connection;
 		DBConnection dbConn	= new DBConnection();
 		conn = dbConn.getDBConnection();
+		set date
 	}*/
+	
+	//Needs to be changed to retrieve the correct date
+	public static java.sql.Date getTodaysDate(int month, int date, int year){
+		java.sql.Date fulldate = new java.sql.Date(0);
+		fulldate.setDate(date);
+		fulldate.setMonth(month - 1);
+		fulldate.setYear(year - 1900);
+		return fulldate;
+	}
 	
 	public static void addComponentsToPane(Container pane) {
 		
@@ -116,30 +130,23 @@ public class AddFamilyUI {
             		System.out.println("saved");
             		System.out.println("lastname::" + lastNameTF.getText());
             		
-            		/*lastNameTF;
-            		primaryFirstNameTF;
-            		noAdultsTF;
-            		noChildrenTF;
-            		houseNumberTF;
-            		streetTF;
-            		cityTF;
-            		stateTF;
-            		JTextField zipTF;*/
             		
         			try {
         				PreparedStatement insertStatement = null;
-        				String insertSQL = "INSERT INTO Family (Last_Name, Primary_Name, No_Children, No_Adults) VALUES (?, ?, ?, ?)";
+        				String insertSQL = "INSERT INTO Family (Last_Name, Primary_Name, No_Children, No_Adults, Creation_Time) VALUES (?, ?, ?, ?, ?)";
         				insertStatement = conn.prepareStatement(insertSQL);  //having trouble with date
         				insertStatement.setString(1, lastNameTF.getText());
         				insertStatement.setString(2, primaryFirstNameTF.getText());
         				insertStatement.setInt(3, Integer.parseInt(noChildrenTF.getText()));
         				insertStatement.setInt(4, Integer.parseInt(noAdultsTF.getText()));
+        				insertStatement.setDate(5, todaysDate);
         				insertStatement.executeUpdate();
         			} catch (SQLException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
         			}
         			
+        			int familyNumber = 0;
         			try {
         				String querySQL = "SELECT LAST_INSERT_ID()";
         				PreparedStatement selectStatement = (PreparedStatement) conn.prepareStatement(querySQL);
@@ -147,20 +154,42 @@ public class AddFamilyUI {
         				
         				if(rs.next()){
         					System.out.println("family number::" + rs.getInt(1));
+        					familyNumber = rs.getInt(1);
         				}
         				else
-        					System.out.println("Last ID not found.");
+        					System.out.println("ERROR: Last ID not found.");  
         			} catch (SQLException e2) {
         				e2.printStackTrace();
         			}
+    			
+        			// TODO
+        			// ensure city = Elkridge, state = MD, zip = 21076
+        			try {
+        				PreparedStatement insertStatement = null;
+        				String insertSQL = "INSERT INTO Family_Address (Family_Number, House_Number, Street, City, State, Zip, Creation_Time) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        				insertStatement = conn.prepareStatement(insertSQL);  //having trouble with date
+        				insertStatement.setInt(1, familyNumber);
+        				insertStatement.setInt(2, Integer.parseInt(houseNumberTF.getText()));
+        				insertStatement.setString(3, streetTF.getText());
+        				insertStatement.setString(4, cityTF.getText());
+        				insertStatement.setString(5, stateTF.getText());
+        				insertStatement.setString(6, zipTF.getText());
+        				insertStatement.setDate(7, todaysDate);
+        				insertStatement.executeUpdate();
+        			} catch (SQLException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			}        			
             }
         });
 		
 		JButton btnCancel = new JButton("Cancel");
 		saveOrCancel.add(btnCancel);
-        // TODO add cancel button
-        //btnCancel = new JButton("Cancel");
-		
+		btnCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	frame.dispose();
+            }
+		});
 		return saveOrCancel;
 	}
 	
@@ -323,7 +352,7 @@ public class AddFamilyUI {
 	 */
 	private static void createAndShowGUI() {
 		//Create and set up the window.
-		JFrame frame = new JFrame("Add A New Family");
+		frame = new JFrame("Add A New Family");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		addComponentsToPane(frame.getContentPane());
