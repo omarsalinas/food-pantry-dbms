@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -121,16 +122,30 @@ public class AddFamilyUI {
 	
 	private static JPanel createSaveOrCancel(){
 		JPanel saveOrCancel = new JPanel();
-		JButton btnSave = new JButton("Save");
+		final JButton btnSave = new JButton("Save");
 		saveOrCancel.add(btnSave);
 		
         btnSave.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-            		System.out.println("saved");
+            		
             		System.out.println("lastname::" + lastNameTF.getText());
+            		//Make sure there are no blank fields
+            		if (lastNameTF.getText().equals("")||primaryFirstNameTF.getText().equals("")
+            				||noChildrenTF.getText().equals("")||noAdultsTF.getText().equals("")
+            				|| streetTF.getText().equals("")||cityTF.getText().equals("")|| stateTF.getText().equals("")
+            				||houseNumberTF.getText().equals("")||zipTF.getText().equals(""))
+            			
+            		{JOptionPane.showMessageDialog(btnSave,
+        				    "There are blank fields on the form. Please try again.",
+        				    "Blank Fields",
+        				    JOptionPane.ERROR_MESSAGE);}
+            		else{
             		
-            		
+            			//Make sure address is in elkridge before trying to insert anything
+            		if (cityTF.getText().equals("Elkridge") && (stateTF.getText().equals("MD") || 
+            				stateTF.getText().equals("Maryland"))&& zipTF.getText().equals("21076"))
+            		{
         			try {
         				PreparedStatement insertStatement = null;
         				String insertSQL = "INSERT INTO Family (Last_Name, Primary_Name, No_Children, No_Adults, Creation_Time) VALUES (?, ?, ?, ?, ?)";
@@ -141,8 +156,16 @@ public class AddFamilyUI {
         				insertStatement.setInt(4, Integer.parseInt(noAdultsTF.getText()));
         				insertStatement.setDate(5, todaysDate);
         				insertStatement.executeUpdate();
-        			} catch (SQLException e1) {
-        				// TODO Auto-generated catch block
+        			}catch(NumberFormatException nFE)
+        			{
+        				//ensure no of children is numeric
+        				JOptionPane.showMessageDialog(btnSave,
+            				    "Number of Children and Number of Adults must be numeric.",
+            				    "Input Error",
+            				    JOptionPane.ERROR_MESSAGE);
+        			}
+        			catch (SQLException e1) {
+        				
         				e1.printStackTrace();
         			}
         			
@@ -161,9 +184,6 @@ public class AddFamilyUI {
         			} catch (SQLException e2) {
         				e2.printStackTrace();
         			}
-    			
-        			// TODO
-        			// ensure city = Elkridge, state = MD, zip = 21076
         			try {
         				PreparedStatement insertStatement = null;
         				String insertSQL = "INSERT INTO Family_Address (Family_Number, House_Number, Street, City, State, Zip, Creation_Time) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -176,12 +196,34 @@ public class AddFamilyUI {
         				insertStatement.setString(6, zipTF.getText());
         				insertStatement.setDate(7, todaysDate);
         				insertStatement.executeUpdate();
-        			} catch (SQLException e1) {
-        				// TODO Auto-generated catch block
+        				System.out.println("saved");
+        			}
+
+        			//ensure house number is numeric
+        			catch(NumberFormatException nFE)
+        			{
+        				JOptionPane.showMessageDialog(btnSave,
+            				    "House Number must be numeric.",
+            				    "Input Error",
+            				    JOptionPane.ERROR_MESSAGE);
+        			} 
+        			catch (SQLException e1) {
         				e1.printStackTrace();
         			}        			
             }
-        });
+            		else
+            		{System.out.println(cityTF.getText());
+            		System.out.println(stateTF.getText());
+            		System.out.println(zipTF.getText());
+            			
+            		// ensure city = Elkridge, state = MD, zip = 21076
+            			JOptionPane.showMessageDialog(btnSave,
+            				    "Only families from Elkridge, MD, 21076 are allowed.",
+            				    "Address Error",
+            				    JOptionPane.ERROR_MESSAGE);
+            		}			
+            }
+            }});
 		
 		JButton btnCancel = new JButton("Cancel");
 		saveOrCancel.add(btnCancel);
