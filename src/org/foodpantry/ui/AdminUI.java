@@ -3,8 +3,10 @@ package org.foodpantry.ui;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,26 +33,47 @@ public class AdminUI {
 		final JTextField usernameTextField = new JTextField(10);
 		addUserPane.add(usernameTextField);
 
-		// Add user name password field
+		// Add password field
 		final JPasswordField passwordField = new JPasswordField(10);
 		addUserPane.add(passwordField);
-
+		
+		final JCheckBox adminBox = new JCheckBox();
+		adminBox.setSelected(false);
+		addUserPane.add(adminBox);
+		
 		JButton addUserButton = new JButton("Add User");
 		addUserButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (usernameTextField.getText() != null && passwordField.getPassword() != null) {
-					String insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() + "', '" + passwordField.getPassword().toString() +"')";
-					
+				if ( usernameTextField.getText() != null && usernameTextField.getText().trim().length() != 0 && passwordField.getPassword() != null && passwordField.getPassword().length != 0) {
+											
+					String insertStmt;
+					// Check the admin boolean to see if the user should be an admin or not
+					if(adminBox.isSelected()){
+						insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() + "', '" + passwordField.getText().toString() +"', true)";						
+					}
+					else{
+						insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() + "', '" + passwordField.getText().toString() +"', false)";	
+					}
+				
+					//Debugging printing
+					System.out.println("User:"+ usernameTextField.getText() +  " Password:" + passwordField.getPassword().toString());
+									
+					int insert = 0;
 					// create connection to database
 					DBConnection conn = new DBConnection();
-
 					// proceed only if connection was successful
 					if (conn.Success) {
 						// execute delete
-						boolean insert = conn.executeUpdate(insertStmt);
-						if (insert == true) {
+						try{
+							insert = conn.executeUpdate(insertStmt);
+						}
+						catch (SQLException s){
+							  System.out.println("SQL statement is not executed!" + s.toString());
+						}
+
+						if (insert > 0 ) {
 							System.out.println("User was added.");
 						} else {
 							System.err.println("User was not added.");
@@ -61,6 +84,7 @@ public class AdminUI {
 				}
 				else {
 					// TODO - display error say a user name and password must be entered to add
+					System.err.println("Username and Password cannot be blank");
 				}
 			
 			}
@@ -102,8 +126,13 @@ public class AdminUI {
 					// proceed only if connection was successful
 					if (conn.Success) {
 						// execute delete
-						boolean delete = conn.executeUpdate(deleteStmt);
-						if (delete == true) {
+						int delete = 0;
+						try {
+							delete = conn.executeUpdate(deleteStmt);
+						} catch (SQLException e1) {
+							  System.out.println("SQL statement is not executed!" + e1.toString());
+						}
+						if (delete > 0) {
 							System.out.println("User was deleted.");
 						} else {
 							System.err.println("User not deleted.");
