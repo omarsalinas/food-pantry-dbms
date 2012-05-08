@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -19,6 +20,10 @@ import org.foodpantry.db.DBConnection;
 
 public class AdminUI {
 
+	private static String insertStmt = null;
+	private static Statement stmt = null;
+
+	
 	/**
 	 * Create a pane that allows users to be added
 	 */
@@ -45,33 +50,46 @@ public class AdminUI {
 		final JButton addUserButton = new JButton("Add User");
 		addUserButton.addActionListener(new ActionListener() {
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if ( usernameTextField.getText() != null && usernameTextField.getText().trim().length() != 0 && passwordField.getPassword() != null && passwordField.getPassword().length != 0) {
+				
+				int insert = 0;
+				
+				// Check to make sure the username and password filed are not empty
+				if ( usernameTextField.getText() != null &&
+						usernameTextField.getText().trim().length() != 0 &&
+						passwordField.getPassword() != null 
+						&& passwordField.getPassword().length != 0) {
 											
-					String insertStmt;
 					// Check the admin boolean to see if the user should be an admin or not
+					// and build the query accordingly
 					if(adminBox.isSelected()){
-						insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() + "', '" + passwordField.getText().toString() +"', true)";						
+						insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText()
+								+ "', '" + passwordField.getText().toString() 
+								+"', true)";						
 					}
 					else{
-						insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() + "', '" + passwordField.getText().toString() +"', false)";	
+						insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() 
+								+ "', '" + passwordField.getText().toString() 
+								+"', false)";	
 					}
 				
-					//Debugging printing
-					System.out.println("User:"+ usernameTextField.getText() +  " Password:" + passwordField.getPassword().toString());
+					// Debugging printing of username and password
+					System.out.println("User:"+ usernameTextField.getText());
+					System.out.println("Password:" + passwordField.getPassword().toString());
 									
-					int insert = 0;
-					// create connection to database
+					// Create connection to database
 					DBConnection conn = new DBConnection();
-					// proceed only if connection was successful
+					// Proceed only if connection was successful
 					if (conn.Success) {
 						// execute delete
 						try{
-							insert = conn.executeUpdate(insertStmt);
+							stmt = conn.getDBConnection().createStatement();
+							insert = stmt.executeUpdate(insertStmt);
 						}
 						catch (SQLException s){
-							  System.out.println("SQL statement is not executed!" + s.toString());
+							  System.out.println("Adding user FAILED" + s.toString());
 						}
 
 						if (insert > 0 ) {
@@ -115,12 +133,15 @@ public class AdminUI {
 		deleteUserPane.add(usernameTextField);
 
 		// Delete  user button
-		JButton deleteUserButton = new JButton("Delete User");
+		final JButton deleteUserButton = new JButton("Delete User");
 		deleteUserPane.add(deleteUserButton);
 		deleteUserButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				int delete = 0;
+
 				if (usernameTextField.getText() != null) {
 					String deleteStmt = "DELETE FROM Pantry_Security WHERE User_Name='"
 							+ usernameTextField.getText() + "'";
@@ -131,11 +152,11 @@ public class AdminUI {
 					// proceed only if connection was successful
 					if (conn.Success) {
 						// execute delete
-						int delete = 0;
 						try {
-							delete = conn.executeUpdate(deleteStmt);
-						} catch (SQLException e1) {
-							  System.out.println("SQL statement is not executed!" + e1.toString());
+							stmt = conn.getDBConnection().createStatement();
+							delete = stmt.executeUpdate(deleteStmt);
+						} catch (SQLException s) {
+							  System.out.println("Deleting user FAILED" + s.toString());
 						}
 						if (delete > 0) {
 							System.out.println("User was deleted.");
@@ -148,7 +169,12 @@ public class AdminUI {
 				}
 
 				else {
-					// TODO - display error say a user name must be entered to delete
+					// display error say a user name must be entered to delete
+					System.err.println("Username cannot be blank");
+					JOptionPane.showMessageDialog(
+						    deleteUserButton, "Username must be entered to delete a new user.",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -157,7 +183,7 @@ public class AdminUI {
 	}
 
 	/**
-	 * Create a pane that allows users to be added
+	 * Create a pane that allows users to be modified
 	 */
 	private static JPanel adminModifyUserPane() {
 		JPanel modifyUserPane = new JPanel();
