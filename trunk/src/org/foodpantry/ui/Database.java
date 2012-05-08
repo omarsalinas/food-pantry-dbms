@@ -55,7 +55,11 @@ public class Database {
 		}
 	}
 	
-	
+	/**
+	 * @param familyNumber
+	 * @return String LastName
+	 * @throws SQLException
+	 */
 	public String getFamilyLastName(int familyNumber) throws SQLException{
 		String LastName = null;
 		PreparedStatement selectStatement;
@@ -71,6 +75,11 @@ public class Database {
 		return LastName;
 	}
 	
+	/**
+	 * @param familyNumber
+	 * @return number of people in the family
+	 * @throws SQLException
+	 */
 	public int getNoInFamily(int familyNumber) throws SQLException{
 		int noChildren = 0;
 		int noAdults = 0;
@@ -88,6 +97,12 @@ public class Database {
 		return (noChildren + noAdults);
 	}
 	
+	/**
+	 * @param date
+	 * @param familyNumber
+	 * @return List of stations
+	 * @throws SQLException
+	 */
 	public List<String> getStationsFamilyVisit(Date date, int familyNumber) throws SQLException{
 		List<String> stations = new ArrayList<String>();
 		PreparedStatement selectStatement;
@@ -104,6 +119,12 @@ public class Database {
 		return stations;
 	}
 	
+	/**
+	 * Returns a list that includes both 
+	 * @param date
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<Integer> getListFromVisitPanty(Date date) throws SQLException{
 		List<Integer> familyNumbers = new ArrayList<Integer>();
 		PreparedStatement selectStatement;
@@ -142,6 +163,11 @@ public class Database {
 		return stations;
 	}
 	
+	/**
+	 * TODO find a way to input the date from the user
+	 * @return date
+	 * @throws SQLException
+	 */
 	public Date getDate() throws SQLException{
 		Date date;
 		PreparedStatement selectStatement;
