@@ -40,7 +40,7 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		
 		// Set JFrame Configuration
 		this.setTitle(title);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
 		
@@ -65,24 +65,28 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 				 SpringLayout.WEST, pane);
 		layout.putConstraint(SpringLayout.NORTH, scrollPane,
 				 padding,
-				 SpringLayout.NORTH, pane);
-		layout.putConstraint(SpringLayout.EAST, pane, 
-				 padding, 
-				 SpringLayout.EAST, editFamily);
+				 SpringLayout.SOUTH, editFamily);
 		// Edit family constraints
 		layout.putConstraint(SpringLayout.WEST, editFamily,
 				 padding,
 				 SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.SOUTH, pane,
+		layout.putConstraint(SpringLayout.NORTH, editFamily,
 				 padding, 
-				 SpringLayout.SOUTH, editFamily);
+				 SpringLayout.NORTH, pane);
 		// Add family constraints
 		layout.putConstraint(SpringLayout.WEST, addFamily,
 				 padding,
-				 SpringLayout.WEST, editFamily);
+				 SpringLayout.EAST, editFamily);
+		layout.putConstraint(SpringLayout.NORTH, addFamily,
+				 padding, 
+				 SpringLayout.NORTH, pane);
+		// pane constraints
 		layout.putConstraint(SpringLayout.SOUTH, pane,
 				 padding, 
-				 SpringLayout.SOUTH, addFamily);
+				 SpringLayout.SOUTH, scrollPane);
+		layout.putConstraint(SpringLayout.EAST, pane, 
+				 padding, 
+				 SpringLayout.EAST, scrollPane);
 		
 		this.pack();
 	}
