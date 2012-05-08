@@ -22,9 +22,16 @@ public class AdminUI {
 	private static JPanel adminAddUserPane() {
 		JPanel addUserPane = new JPanel();
 
+		// Add user label
+		JLabel addLabel = new JLabel();
+		addLabel.setText("Add User:");
+		addUserPane.add(addLabel);
+		
+		// Add user name text field
 		final JTextField usernameTextField = new JTextField(10);
 		addUserPane.add(usernameTextField);
 
+		// Add user name password field
 		final JPasswordField passwordField = new JPasswordField(10);
 		addUserPane.add(passwordField);
 
@@ -68,11 +75,19 @@ public class AdminUI {
 	 */
 	private static JPanel adminDeleteUserPane() {
 		JPanel deleteUserPane = new JPanel();
-
+		
+		// Delete Label
+		JLabel deleteLabel = new JLabel();
+		deleteLabel.setText("Delete User:");
+		deleteUserPane.add(deleteLabel);
+		
+		// Delete user name text field
 		final JTextField usernameTextField = new JTextField(10);
 		deleteUserPane.add(usernameTextField);
 
+		// Delete  user button
 		JButton deleteUserButton = new JButton("Delete User");
+		deleteUserPane.add(deleteUserButton);
 		deleteUserButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -103,9 +118,62 @@ public class AdminUI {
 				}
 			}
 		});
-		deleteUserPane.add(deleteUserButton);
 
 		return deleteUserPane;
+	}
+
+	/**
+	 * Create a pane that allows users to be added
+	 */
+	private static JPanel adminModifyUserPane() {
+		JPanel addUserPane = new JPanel();
+
+		// Add user label
+		JLabel addLabel = new JLabel();
+		addLabel.setText("Add User:");
+		addUserPane.add(addLabel);
+		
+		// Add user name text field
+		final JTextField usernameTextField = new JTextField(10);
+		addUserPane.add(usernameTextField);
+
+		// Add user name password field
+		final JPasswordField passwordField = new JPasswordField(10);
+		addUserPane.add(passwordField);
+
+		JButton addUserButton = new JButton("Add User");
+		addUserButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (usernameTextField.getText() != null && passwordField.getPassword() != null) {
+					String insertStmt = "INSERT INTO Pantry_Security VALUES ('" + usernameTextField.getText() + "', '" + passwordField.getPassword().toString() +"')";
+					
+					// create connection to database
+					DBConnection conn = new DBConnection();
+
+					// proceed only if connection was successful
+					if (conn.Success) {
+						// execute delete
+						boolean insert = conn.executeUpdate(insertStmt);
+						if (insert == true) {
+							System.out.println("User was added.");
+						} else {
+							System.err.println("User was not added.");
+						}
+					}
+					// close connection
+					conn.closeConnection();
+				}
+				else {
+					// TODO - display error say a user name and password must be entered to add
+				}
+			
+			}
+		});
+		addUserPane.add(addUserButton);
+
+		return addUserPane;
 	}
 	
 	public static void main(String[] args) {
@@ -120,12 +188,12 @@ public class AdminUI {
 	}
 
 	protected static void createAndShowGUI() {
-		//Create and set up the window.
+		// Create and set up the window.
 		JFrame frame = new JFrame("Administrative Services");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//Set up the content pane.
+		// Set up the content pane.
 		addComponentsToPane(frame.getContentPane());
-		//Display the window.
+		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
 	}
@@ -134,41 +202,28 @@ public class AdminUI {
 		//set parent pane to springlayout
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
-		// Add pane for admin actions
-		JPanel addUser = AdminUI.adminAddUserPane();
-		JLabel addLabel = new JLabel();
-		addLabel.setText("Add User:");
-		pane.add(addUser);
-		pane.add(addLabel);
 
+		// Add add user pane
+		JPanel addUser = AdminUI.adminAddUserPane();
+		pane.add(addUser);
+
+		// Add delete user pane
 		JPanel deleteUser = AdminUI.adminDeleteUserPane();
-		JLabel deleteLabel = new JLabel();
-		deleteLabel.setText("Delete User:");
 		pane.add(deleteUser);
-		pane.add(deleteLabel);
 		
 		// Standard padding for the elements
 		int padding = 5;
 		// constraints on the placement of the status bar
-		layout.putConstraint(SpringLayout.WEST, addLabel,
-				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, addLabel,
-				 padding,SpringLayout.NORTH, pane);
-		
 		layout.putConstraint(SpringLayout.WEST, addUser,
 				 padding,SpringLayout.WEST, pane);
 		layout.putConstraint(SpringLayout.NORTH, addUser,
-				 padding,SpringLayout.SOUTH, addLabel);
-
-		layout.putConstraint(SpringLayout.WEST, deleteLabel,
-				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, deleteLabel,
-				 padding,SpringLayout.SOUTH, addUser);
+				 padding,SpringLayout.NORTH, pane);
 		
 		layout.putConstraint(SpringLayout.WEST, deleteUser,
 				 padding,SpringLayout.WEST, pane);
 		layout.putConstraint(SpringLayout.NORTH, deleteUser,
-				 padding, SpringLayout.SOUTH, deleteLabel);
+				 padding,SpringLayout.SOUTH, addUser);
+		
 		// Constrain the pane to the internal elements
 		layout.putConstraint(SpringLayout.SOUTH, pane,
 				 padding, SpringLayout.SOUTH, deleteUser);
