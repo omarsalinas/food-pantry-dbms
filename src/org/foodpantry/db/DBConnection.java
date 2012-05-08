@@ -59,11 +59,14 @@ public class DBConnection {
 	
 	/**
 	 * Function to execute a statement against db which returns no data
-	 * set. Returns true if update was successful.*/
-	public boolean executeUpdate(String statement)
+	 * set. Returns row count if update was successful or 0 if nothing was done
+	 * @throws SQLException */
+	public int executeUpdate(String statement) throws SQLException
 	{
-		//*TO DO
-		return true;
+		Statement st = connection.createStatement();
+				
+		//run query against db
+		return st.executeUpdate(statement);
 	}
 	
 	/**
