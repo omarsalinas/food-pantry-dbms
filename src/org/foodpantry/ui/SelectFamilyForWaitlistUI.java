@@ -4,11 +4,8 @@ import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-<<<<<<< .mine
 import java.awt.event.KeyEvent;
-=======
 import java.sql.SQLException;
->>>>>>> .r61
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -51,12 +48,12 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		pane.setLayout(layout);
 		
 		FamilyTableModel model = null;
-		try {
-			model = new FamilyTableModel();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+////			model = new FamilyTableModel();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		JTable table = new JTable(model);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(
@@ -65,34 +62,32 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		
 		pane.add(scrollPane);
 		
-		JButton addFamily = SelectFamilyForWaitlistUI.addFamilyButton(); 
-			//new JButton("Add New Family");
-		pane.add(addFamily);
-		JButton editFamily = new JButton("Edit Family");
-		pane.add(editFamily);
+		JPanel buttonPane = this.createButtonPane();
+		pane.add(buttonPane);
 		
+		/*
+		 * pane layout
+		 * +------------
+		 * | buttonPane
+		 * |------------
+		 * | scrollPane
+		 * +------------
+		 */
 		int padding = 5;
+		// Edit family constraints
+		layout.putConstraint(SpringLayout.WEST, buttonPane,
+				 padding,
+				 SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, buttonPane,
+				 padding, 
+				 SpringLayout.NORTH, pane);
 		// Scrollpane constraints
 		layout.putConstraint(SpringLayout.WEST, scrollPane,
 				 padding,
 				 SpringLayout.WEST, pane);
 		layout.putConstraint(SpringLayout.NORTH, scrollPane,
 				 padding,
-				 SpringLayout.SOUTH, editFamily);
-		// Edit family constraints
-		layout.putConstraint(SpringLayout.WEST, editFamily,
-				 padding,
-				 SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, editFamily,
-				 padding, 
-				 SpringLayout.NORTH, pane);
-		// Add family constraints
-		layout.putConstraint(SpringLayout.WEST, addFamily,
-				 padding,
-				 SpringLayout.EAST, editFamily);
-		layout.putConstraint(SpringLayout.NORTH, addFamily,
-				 padding, 
-				 SpringLayout.NORTH, pane);
+				 SpringLayout.SOUTH, buttonPane);
 		// pane constraints
 		layout.putConstraint(SpringLayout.SOUTH, pane,
 				 padding, 
@@ -105,27 +100,33 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 	}
 
 	/**
-	 * Create a status pane that displays the following
+	 * Create a pane that displays the following:
 	 * 	-"Add Family to List" button
+	 *  -"Edit Family Information" button
 	 */
-	private static JButton addFamilyButton() {
+	private JPanel createButtonPane() {
+		JPanel pane = new JPanel();
 
 		JButton addNewFamilyBtn = new JButton("Add New Family");
-		addNewFamilyBtn.addActionListener(new openWindow()); //TODO should this be added inside this class??
+		addNewFamilyBtn.addActionListener(this); 
 		addNewFamilyBtn.setActionCommand("Add New Family");
-		//addNewFamilyBtn.setMnemonic(KeyEvent.VK_A);
+		addNewFamilyBtn.setMnemonic(KeyEvent.VK_A);
+		
+		JButton editFamilyBtn = new JButton("Edit Family Information");
+		editFamilyBtn.addActionListener(this); 
+		editFamilyBtn.setActionCommand("Edit Family");
+		editFamilyBtn.setMnemonic(KeyEvent.VK_E);
 	
-		return addNewFamilyBtn; 
+		return pane; 
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		/*if (e.getActionCommand().equals("Add New Family")) {
-			JFrame window = new SelectFamilyForWaitlistUI();
-			window.pack();
-			window.setVisible(true);
-		}*/
+		if (e.getActionCommand().equals("Add New Family")) {
+			AddFamilyUI window = new AddFamilyUI();
+		} else if (e.getActionCommand().equals("Edit Family")) {
+			//TODO have something for editing family information
+		}
 	}
 
 }
