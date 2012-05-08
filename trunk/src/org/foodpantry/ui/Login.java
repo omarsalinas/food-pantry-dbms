@@ -23,8 +23,8 @@ public class Login {
         String userNameDB = null;//holds user id returned from query
         String userPwDB = null;//holds user password returned from query
         
-    	//create connection to database
-    	DBConnection conn = new DBConnection();
+    	//get connection to database from MainUI
+    	DBConnection conn = MainUI.dbConnection;
     	
     	//proceed only if connection was successful
     	if(conn.Success)
@@ -44,17 +44,14 @@ public class Login {
     			
     			//fail if more than one record for username is found
     			if(rs.next()){
-    				conn.closeConnection();
     			return false;}
 
-    			//authenication is sucessfull
+    			//authentication is successful
     			else if(username.equals(userNameDB) && password.equals(userPwDB)){
-    				conn.closeConnection();
     				return true;}
 
     			//user name or password don't match.
     			else{
-    				conn.closeConnection();
     				return false;}			
     		}
     		else{
