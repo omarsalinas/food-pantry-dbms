@@ -1,5 +1,6 @@
 package org.foodpantry.ui;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.foodpantry.db.*; //import class to create connection objs
 import java.sql.ResultSet;
@@ -10,6 +11,10 @@ import java.sql.ResultSet;
  */
 
 public class Login {
+	
+	private static Statement stmt = null;
+	private static ResultSet rs = null;
+
     public static boolean authenticate(String username, String password) throws SQLException {
     	
         String query = "select * from Pantry_Security where User_Name='"+username+"'" +
@@ -25,20 +30,20 @@ public class Login {
     	if(conn.Success)
     	{
     		//execute user authentication query
-    		conn.executeStatement(query);
+    		stmt = conn.getDBConnection().createStatement();
+			rs = stmt.executeQuery(query);
     	  		
     		//if there is at least one row returned, get it
-    		if (((ResultSet) conn.results).next())
-    		{
+    		if ( rs.next() ){
     			//store credentials from db in local vars
-    			userNameDB = ((ResultSet) conn.results).getString(1);
-    			userPwDB = ((ResultSet) conn.results).getString(2);
+    			userNameDB = rs.getString(1);
+    			userPwDB = rs.getString(2);
     			
     			System.out.println(userNameDB);
     			System.out.println(userPwDB);
     			
     			//fail if more than one record for username is found
-    			if(((ResultSet)conn.results).next()){
+    			if(rs.next()){
     				conn.closeConnection();
     			return false;}
 
