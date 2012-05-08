@@ -58,18 +58,6 @@ public class DBConnection {
 	}
 	
 	/**
-	 * Function to execute a statement against db which returns no data
-	 * set. Returns row count if update was successful or 0 if nothing was done
-	 * @throws SQLException */
-	public int executeUpdate(String statement) throws SQLException
-	{
-		Statement st = connection.createStatement();
-				
-		//run query against db
-		return st.executeUpdate(statement);
-	}
-	
-	/**
 	 * Function to execute a statement against db which returns a dataset
 	 * @throws SQLException 
 	 */
