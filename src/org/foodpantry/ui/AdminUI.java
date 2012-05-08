@@ -53,7 +53,8 @@ public class AdminUI {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				// Get connection to database from MainUI
+				DBConnection conn = MainUI.dbConnection;
 				int insert = 0;
 				
 				// Check to make sure the username and password filed are not empty
@@ -79,8 +80,6 @@ public class AdminUI {
 					System.out.println("User:"+ usernameTextField.getText());
 					System.out.println("Password:" + passwordField.getPassword().toString());
 									
-					// Create connection to database
-					DBConnection conn = new DBConnection();
 					// Proceed only if connection was successful
 					if (conn.Success) {
 						// execute delete
@@ -98,8 +97,6 @@ public class AdminUI {
 							System.err.println("User was not added.");
 						}
 					}
-					// close connection
-					conn.closeConnection();
 				}
 				else {
 					//display error say a user name and password must be entered to add
@@ -139,16 +136,14 @@ public class AdminUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				// Get connection to database from MainUI
+				DBConnection conn = MainUI.dbConnection;
 				int delete = 0;
 
 				if (usernameTextField.getText() != null) {
 					String deleteStmt = "DELETE FROM Pantry_Security WHERE User_Name='"
 							+ usernameTextField.getText() + "'";
 					
-					// create connection to database
-					DBConnection conn = new DBConnection();
-
 					// proceed only if connection was successful
 					if (conn.Success) {
 						// execute delete
@@ -164,8 +159,6 @@ public class AdminUI {
 							System.err.println("User not deleted.");
 						}
 					}
-					// close connection
-					conn.closeConnection();
 				}
 
 				else {
