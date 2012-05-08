@@ -44,7 +44,7 @@ public class MainUI {
 	 */
 	private static String username;
 	
-	private static DBConnection dbConnection;
+	protected static DBConnection dbConnection;
 	
 	/**
 	 * Add all of the components to the pane to create the main GUI.
@@ -56,7 +56,6 @@ public class MainUI {
 		pane.setLayout(layout);
 		
 		//Create Connection Database
-		dbConnection = new DBConnection();
 		Database database = new Database(dbConnection.getDBConnection());
 		
 		// Add pane for user/admin/connection info
@@ -222,6 +221,7 @@ public class MainUI {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				dbConnection = new DBConnection();
 				MainUI.createAndShowGUI();
 			}
 		});
