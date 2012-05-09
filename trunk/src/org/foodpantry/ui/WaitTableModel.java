@@ -262,16 +262,12 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 		listData.toArray()[row] = data;
 	}
 
-	@Override
-	public void reorder(int fromIndex, int toIndex) {
-		
-		
-	}
-
 	/**
 	 * Used by the TransferHandler to support reordering.
 	 */
-//	public interface Reorderable {
-//		public void reorder(int fromIndex, int toIndex);
-//	}
+	@Override
+	public void reorder(int fromIndex, int toIndex) {
+		listData.add(toIndex, listData.get(fromIndex));
+		listData.remove(fromIndex);
+	}
 }
