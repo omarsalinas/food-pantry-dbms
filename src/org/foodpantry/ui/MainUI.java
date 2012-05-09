@@ -151,11 +151,12 @@ public class MainUI {
 		
 		/*
 		 * If the user is an administrator, give them an administration button.
-		 * TODO give button functionality
-		 * TODO create a panel to handle that functionality
 		 */
 		if (isAdministrator()) {
 			JButton administrate = new JButton("Administration");
+			administrate.addActionListener(new openWindow());
+			administrate.setActionCommand("Admin");
+
 			statusPane.add(administrate);
 		}
 	
@@ -250,6 +251,9 @@ class openWindow implements ActionListener {
 			JFrame window = new AddNewFamilyUI();
 			window.pack();
 			window.setVisible(true);
+		}
+		if (e.getActionCommand().equals("Admin")) {
+			new AdminUI();
 		}
 	}
 	
