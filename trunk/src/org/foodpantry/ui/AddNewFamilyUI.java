@@ -166,7 +166,15 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         				insertStatement.setInt(4, Integer.parseInt(noAdultsTF.getText()));
         				insertStatement.setDate(5, todaysDate);
         				insertStatement.executeUpdate();
-        			} catch (SQLException e1) {
+        			} 
+        			catch(NumberFormatException nFE){
+        				
+        				//ensure no of children  & adults is numeric
+        				JOptionPane.showMessageDialog(btnSave, "Number of Children and Number" +
+        						" of Adults must be numeric.", "Input Error",
+        						JOptionPane.ERROR_MESSAGE);
+        			}
+        			catch (SQLException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
         			}
@@ -201,15 +209,20 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         				insertStatement.setString(6, zipTF.getText());
         				insertStatement.setDate(7, todaysDate);
         				insertStatement.executeUpdate();
-        			} catch (SQLException e1) {
+        			} 
+        			//ensure house number is numeric
+        			catch(NumberFormatException nFE)
+        			{
+        				JOptionPane.showMessageDialog(btnSave, "House Number must be numeric.",
+        						"Input Error", JOptionPane.ERROR_MESSAGE);
+        			}
+        			catch (SQLException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
         			}     
         }
         else{
-        	System.out.println(cityTF.getText()); 
-        	System.out.println(stateTF.getText()); 
-        	System.out.println(zipTF.getText());
+        	
         	// ensure city = Elkridge, state = MD, zip = 21076 
         	JOptionPane.showMessageDialog(btnSave,
         	"Only families from Elkridge, MD, 21076 are allowed.", 
