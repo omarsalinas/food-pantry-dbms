@@ -55,9 +55,11 @@ public class FamilyTableModel extends AbstractTableModel {
 		/*
 		 * Query the database and fill the data
 		 */
-		String sql = "SELECT Family.Family_Number, Last_Name, Primary_Name, No_Children, No_Adults, Phone_Number, House_Number, Street, City " +
-					 "FROM Family, Family_Address, Family_Phone_Number " +
-					 "WHERE Family.Family_number = Family_Address.Family_Number " +
+		String sql = 
+		"SELECT Family.Family_Number, Last_Name, Primary_Name, No_Children, No_Adults, ifnull(Phone_Number,0)," +
+		" ifnull(House_Number,0), ifnull(Street,'n/a'), ifnull(City,'n/a')" +
+					 "FROM Family left outer join (Family_Address, Family_Phone_Number) " +
+					 "on Family.Family_number = Family_Address.Family_Number " +
 					 "AND Family.Family_number = Family_Phone_Number.Family_Number;";
 		
 		ResultSet result = null;
