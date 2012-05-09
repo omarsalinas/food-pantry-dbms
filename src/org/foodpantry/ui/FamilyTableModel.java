@@ -38,8 +38,8 @@ public class FamilyTableModel extends AbstractTableModel {
 							"Primary",
 							"# Adults",
 							"# Children",
-							"Current Phone",
-							"Current Address"};
+							"Phone",
+							"Address"};
 	
 	Object[][] data;
 	
@@ -66,20 +66,20 @@ public class FamilyTableModel extends AbstractTableModel {
 
 			// initialize the data array
 			result.last();
-			data = new Object[result.getRow()][getColumnCount()];
+			this.data = new Object[result.getRow()][getColumnCount()];
 			result.beforeFirst();
 			
 			// read in the data
 			while (result.next()) {
 				int row = result.getRow() - 1;
-				data[row][0] = new Boolean(false);
-				data[row][1] = result.getInt(1);
-				data[row][2] = result.getString(2);
-				data[row][3] = result.getString(3);
-				data[row][4] = result.getInt(4); 
-				data[row][5] = result.getInt(5);
-				data[row][6] = result.getString(6);
-				data[row][7] = result.getInt(7) + " " + result.getString(8) + " " + result.getString(9);				
+				this.data[row][0] = new Boolean(false);
+				this.data[row][1] = result.getInt(1);
+				this.data[row][2] = result.getString(2);
+				this.data[row][3] = result.getString(3);
+				this.data[row][4] = result.getInt(4); 
+				this.data[row][5] = result.getInt(5);
+				this.data[row][6] = result.getString(6);
+				this.data[row][7] = result.getInt(7) + " " + result.getString(8) + " " + result.getString(9);				
 			}
 		} catch (SQLException e) {
 			System.out.println("Family Table Model SQL Query Failed");
@@ -89,22 +89,44 @@ public class FamilyTableModel extends AbstractTableModel {
 	
 	@Override
 	public int getColumnCount() {
-		return columnNames.length;
+		return this.columnNames.length;
 	}
 
 	@Override
 	public int getRowCount() {
-		return data.length;
+		return this.data.length;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return data[rowIndex][columnIndex];
+		return this.data[rowIndex][columnIndex];
 	}
+	
+	@Override
+	public String getColumnName(int col) {
+		return this.columnNames[col].toString();
+	}
+	
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		if ( columnIndex == 0 ) {
+			return true;
+		}
+		
+		return false; 
+	}
+	
+	/**
+	 * Overrides parent function.  Necessary for boolean value to render properly
+	 */
+	@Override
+	public Class<?> getColumnClass(int c) {
+        return getValueAt(0, c).getClass();
+    }
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
-		super.setValueAt(aValue, rowIndex, columnIndex);
+		this.data[rowIndex][columnIndex] = aValue;
+        fireTableCellUpdated(rowIndex, columnIndex);
 	}
 }

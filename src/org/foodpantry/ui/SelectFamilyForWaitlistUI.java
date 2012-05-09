@@ -101,15 +101,20 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 	 */
 	private JPanel createButtonPane() {
 		JPanel pane = new JPanel();
+		
+		JButton addSelectionBtn = new JButton("Add Selection");
+		addSelectionBtn.addActionListener(this);
+		addSelectionBtn.setActionCommand("Add Selection");
+		addSelectionBtn.setMnemonic(KeyEvent.VK_A);
+		pane.add(addSelectionBtn);
 
-		JButton addNewFamilyBtn = new JButton("Add New Family");
-		//addNewFamilyBtn.addActionListener(this);
+		JButton addNewFamilyBtn = new JButton("Create Family");
 		addNewFamilyBtn.addActionListener(new openWindow());
 		addNewFamilyBtn.setActionCommand("Add New Family");
-		addNewFamilyBtn.setMnemonic(KeyEvent.VK_A);
+		addNewFamilyBtn.setMnemonic(KeyEvent.VK_C);
 		pane.add(addNewFamilyBtn);
 		
-		JButton editFamilyBtn = new JButton("Edit Family Information");
+		JButton editFamilyBtn = new JButton("Edit Family");
 		editFamilyBtn.addActionListener(this); 
 		editFamilyBtn.setActionCommand("Edit Family");
 		editFamilyBtn.setMnemonic(KeyEvent.VK_E);
