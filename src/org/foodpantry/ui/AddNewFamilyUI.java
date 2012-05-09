@@ -152,6 +152,10 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
             		{JOptionPane.showMessageDialog(btnSave, "There are blank fields on the form. Please try again.", "Blank Fields",
             			JOptionPane.ERROR_MESSAGE);
             		} 
+            		else if(cityTF.getText().equals("Elkridge") && (stateTF.getText().equals("MD") ||
+            			stateTF.getText().equals("Maryland"))&& zipTF.getText().equals("21076")){
+        	
+        
         			try {
         				PreparedStatement insertStatement = null;
         				String insertSQL = "INSERT INTO Family (Last_Name, Primary_Name, No_Children, No_Adults, Creation_Time) VALUES (?, ?, ?, ?, ?)";
@@ -200,7 +204,17 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         			} catch (SQLException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
-        			}        			
+        			}     
+        }
+        else{
+        	System.out.println(cityTF.getText()); 
+        	System.out.println(stateTF.getText()); 
+        	System.out.println(zipTF.getText());
+        	// ensure city = Elkridge, state = MD, zip = 21076 
+        	JOptionPane.showMessageDialog(btnSave,
+        	"Only families from Elkridge, MD, 21076 are allowed.", 
+        	"Address Error",  JOptionPane.ERROR_MESSAGE); 
+        }
             }
         });
 		
