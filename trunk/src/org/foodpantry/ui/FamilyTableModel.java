@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.mysql.jdbc.Connection;
@@ -21,134 +23,88 @@ import com.mysql.jdbc.Statement;
 public class FamilyTableModel extends AbstractTableModel {
 
 	/**
-	 * Default serial version UID
+	 * Columns should be:
+	 * -Family Number (Family table Primary key, ID)
+	 * -Last Name (Family table)
+	 * -Primary Name (Family table)
+	 * -Number of Adults (Family table)
+	 * -Number of Children (Family table)
+	 * -Current Phone Number (Family_Phone_Number table)
+	 * -Current Address (Family_Address)
 	 */
-	private static final long serialVersionUID = 1L;
+	String[] columnNames = {"Select",
+							"ID",
+							"Last Name",
+							"Primary",
+							"# Adults",
+							"# Children",
+							"Current Phone",
+							"Current Address"};
+	
+	Object[][] data;
+	
+	/**
+	 * Generated Serial Version UID ... 
+	 * Probably unnecessary for this application
+	 */
+	private static final long serialVersionUID = 362425068508364587L;
 
-	Object[][] contents;
-	String[] columnNames;
-	Class[] columnClasses;
-	Connection conn = (Connection) MainUI.dbConnection.connection;
-	String tableName = "Family";
-
-	public FamilyTableModel () throws SQLException {
+	public FamilyTableModel() {
 		super();
-	}
+		
+		/*
+		 * Query the database and fill the data
+		 */
+		String sql = "SELECT Family.Family_Number, Last_Name, Primary_Name, No_Children, No_Adults, Phone_Number, House_Number, Street, City " +
+					 "FROM Family, Family_Address, Family_Phone_Number " +
+					 "WHERE Family.Family_number = Family_Address.Family_Number " +
+					 "AND Family.Family_number = Family_Phone_Number.Family_Number;";
+		
+		ResultSet result = null;
+		try {
+			result =  MainUI.dbConnection.connection.prepareStatement(sql).executeQuery();
 
-	protected void getTableContents () throws SQLException {
-
-		// get metadata: what columns exist and what
-		// types (classes) are they?
-		DatabaseMetaData meta = (DatabaseMetaData) conn.getMetaData();
-		System.out.println ("got meta = " + meta);
-		ResultSet results =
-				meta.getColumns (null, null, tableName, null) ;
-		System.out.println ("got column results");
-		ArrayList<String> colNamesList = new ArrayList<String>();
-		ArrayList<Class> colClassesList = new ArrayList<Class>();
-		while (results.next()) {
-			colNamesList.add (results.getString ("COLUMN_NAME")); 
-			System.out.println ("name: " + 
-					results.getString ("COLUMN_NAME"));
-			int dbType = results.getInt ("DATA_TYPE");
-			switch (dbType) {
-			case Types.INTEGER:
-				colClassesList.add (Integer.class); break; 
-			case Types.FLOAT:
-				colClassesList.add (Float.class); break; 
-			case Types.DOUBLE: 
-			case Types.REAL:
-				colClassesList.add (Double.class); break; 
-			case Types.DATE: 
-			case Types.TIME: 
-			case Types.TIMESTAMP:
-				colClassesList.add (java.sql.Date.class); break; 
-			default:
-				colClassesList.add (String.class); break; 
-			}; 
-			System.out.println ("type: " +
-					results.getInt ("DATA_TYPE"));
+			// initialize the data array
+			result.last();
+			data = new Object[result.getRow()][getColumnCount()];
+			result.beforeFirst();
+			
+			// read in the data
+			while (result.next()) {
+				int row = result.getRow() - 1;
+				data[row][0] = new Boolean(false);
+				data[row][1] = result.getInt(1);
+				data[row][2] = result.getString(2);
+				data[row][3] = result.getString(3);
+				data[row][4] = result.getInt(4); 
+				data[row][5] = result.getInt(5);
+				data[row][6] = result.getString(6);
+				data[row][7] = result.getInt(7) + " " + result.getString(8) + " " + result.getString(9);				
+			}
+		} catch (SQLException e) {
+			System.out.println("Family Table Model SQL Query Failed");
+			e.printStackTrace();
 		}
-		columnNames = new String [colNamesList.size()];
-		colNamesList.toArray (columnNames);
-		columnClasses = new Class [colClassesList.size()];
-		colClassesList.toArray (columnClasses);
-
-		// get all data from table and put into
-		// contents array
-		Statement statement =
-				(Statement) conn.createStatement ();
-		results = statement.executeQuery ("SELECT * FROM " +
-				tableName);
-		ArrayList<Object[]> rowList = new ArrayList<Object[]>();
-		while (results.next()) {
-			ArrayList<Object> cellList = new ArrayList<Object>(); 
-			for (int i = 0; i<columnClasses.length; i++) { 
-				Object cellValue = null;
-
-
-				if (columnClasses[i] == String.class) 
-					cellValue = results.getString (columnNames[i]); 
-				else if (columnClasses[i] == Integer.class) 
-					cellValue = new Integer ( 
-							results.getInt (columnNames[i])); 
-				else if (columnClasses[i] == Float.class) 
-					cellValue = new Float ( 
-							results.getInt (columnNames[i])); 
-				else if (columnClasses[i] == Double.class) 
-					cellValue = new Double ( 
-							results.getDouble (columnNames[i]));
-				else if (columnClasses[i] == java.sql.Date.class) 
-					cellValue = results.getDate (columnNames[i]); 
-				else 
-					System.out.println ("Can't assign " + 
-							columnNames[i]);
-				cellList.add (cellValue);
-			}// for
-			Object[] cells = cellList.toArray();
-			rowList.add (cells);
-
-		} // while
-		// finally create contents two-dim array
-		contents = new Object[rowList.size()] [];
-		for (int i=0; i<contents.length; i++)
-
-			contents[i] = rowList.get (i);
-		System.out.println ("Created model with " +
-				contents.length + " rows");
-
-		// close stuff
-		results.close();
-		statement.close();
-
 	}
-
+	
 	@Override
 	public int getColumnCount() {
-		if (contents.length == 0)
-			return 0;
-		else
-			return contents[0].length;
-	}
-
-	public Object getValueAt (int row, int column) {
-		return contents [row][column];
-	}
-
-	// overrides methods for which AbstractTableModel
-	// has trivial implementations
-
-	public Class getColumnClass (int col) {
-		return columnClasses [col];
-	}
-
-	public String getColumnName (int col) { 
-		return columnNames [col]; 
+		return columnNames.length;
 	}
 
 	@Override
 	public int getRowCount() {
-		return contents.length;
+		return data.length;
 	}
 
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		return data[rowIndex][columnIndex];
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		// TODO Auto-generated method stub
+		super.setValueAt(aValue, rowIndex, columnIndex);
+	}
 }
