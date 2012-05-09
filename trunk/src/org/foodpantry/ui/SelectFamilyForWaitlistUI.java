@@ -111,11 +111,13 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		addNewFamilyBtn.addActionListener(this); 
 		addNewFamilyBtn.setActionCommand("Add New Family");
 		addNewFamilyBtn.setMnemonic(KeyEvent.VK_A);
+		pane.add(addNewFamilyBtn);
 		
 		JButton editFamilyBtn = new JButton("Edit Family Information");
 		editFamilyBtn.addActionListener(this); 
 		editFamilyBtn.setActionCommand("Edit Family");
 		editFamilyBtn.setMnemonic(KeyEvent.VK_E);
+		pane.add(editFamilyBtn);
 	
 		return pane; 
 	}
