@@ -6,13 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Database {
+public class WaitTableModelQueries {
 	
 	Connection conn;
 	
-	Database(Connection connection){
+	WaitTableModelQueries(Connection connection){
 		conn = connection;
 	}
 	
@@ -28,7 +29,7 @@ public class Database {
 		if(check){
 			try {
 				PreparedStatement insertStatement = null;
-				String insertSQL = "INSERT INTO Station_Record (S_Name, Family_Number, Date_Visisted) VALUES (?, ?, ?)";
+				String insertSQL = "INSERT INTO Station_Record (S_Name, Family_Number, Date_Visited) VALUES (?, ?, ?)";
 				insertStatement = conn.prepareStatement(insertSQL);
 				insertStatement.setString(1, station);
 				insertStatement.setInt(2, familyNumber);
@@ -41,7 +42,7 @@ public class Database {
 		}
 		else {
 			PreparedStatement deleteRowStatement = null;
-			String deleteRowSQL = "DELETE * FROM Station_Record WHERE S_Name = ? AND Family_Number = ? AND Date_Visited = ?";
+			String deleteRowSQL = "DELETE FROM Station_Record WHERE S_Name = ? AND Family_Number = ? AND Date_Visited = ?";
 			try {
 				deleteRowStatement = conn.prepareStatement(deleteRowSQL);
 				deleteRowStatement.setString(1, station);
@@ -158,7 +159,19 @@ public class Database {
 		selectStatement.setDate(1, date);
 		resultSet = selectStatement.executeQuery();
 		while(resultSet.next()){
-			stations.add(resultSet.getString("S_Name"));
+			String sName = resultSet.getString("S_Name");
+			if(sName != null){
+				Boolean add = true;
+				Iterator<String> stationNameIterator = stations.iterator();
+				while(stationNameIterator.hasNext()){
+					if(sName == stationNameIterator.next()){
+						add = false;
+					}
+				}
+				if(add == true){
+					stations.add(sName);
+				}
+			}
 		}
 		return stations;
 	}
