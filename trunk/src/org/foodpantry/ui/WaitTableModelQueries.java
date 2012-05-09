@@ -154,24 +154,12 @@ public class WaitTableModelQueries {
 		PreparedStatement selectStatement;
 		ResultSet resultSet;
 		
-		String querySQL = "SELECT S_Name FROM Station_Record where Date_Visited = ?";
+		String querySQL = "SELECT S_Name FROM Station where Date_Visited = ?";
 		selectStatement = conn.prepareStatement(querySQL);
 		selectStatement.setDate(1, date);
 		resultSet = selectStatement.executeQuery();
 		while(resultSet.next()){
-			String sName = resultSet.getString("S_Name");
-			if(sName != null){
-				Boolean add = true;
-				Iterator<String> stationNameIterator = stations.iterator();
-				while(stationNameIterator.hasNext()){
-					if(sName == stationNameIterator.next()){
-						add = false;
-					}
-				}
-				if(add == true){
-					stations.add(sName);
-				}
-			}
+			stations.add(resultSet.getString("S_Name"));
 		}
 		return stations;
 	}
