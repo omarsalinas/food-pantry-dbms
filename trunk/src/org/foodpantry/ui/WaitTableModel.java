@@ -1,4 +1,5 @@
 package org.foodpantry.ui;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 
@@ -19,7 +20,7 @@ public class WaitTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Database database = null;
+	private WaitTableModelQueries qDatabase = null;
 	
 	/**
 	 * Date for the list
@@ -55,7 +56,7 @@ public class WaitTableModel extends AbstractTableModel {
 				return this.orderNumber;
 			case 1:				
 				try {
-					return database.getFamilyLastName(this.familyNumber);
+					return qDatabase.getFamilyLastName(this.familyNumber);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -63,7 +64,7 @@ public class WaitTableModel extends AbstractTableModel {
 				}
 			case 2:
 				try {
-					return database.getNoInFamily(this.familyNumber);
+					return qDatabase.getNoInFamily(this.familyNumber);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -96,7 +97,7 @@ public class WaitTableModel extends AbstractTableModel {
 					while(stationIterator.hasNext()){
 						bool = stationIterator.next();
 						if(count == col){
-							//database.updateStationRecord(this.familyNumber, (String) columnNames.toArray()[col], listDate, (Boolean) value);
+							qDatabase.updateStationRecord(this.familyNumber, (String) columnNames.toArray()[col], listDate, (Boolean) value);
 							newStationList.add((Boolean) value);
 							System.out.println(columnNames.toArray()[col]);
 							
@@ -113,14 +114,15 @@ public class WaitTableModel extends AbstractTableModel {
 		}		
 	}
 	
-	WaitTableModel(Database db){
+	WaitTableModel(Connection conn){
 		//TODO I am having trouble finding a good way to enter the 
 		//date into the database. -Lynn
-		this.database = db;
-		refeshList(this.database);	
+		
+		this.qDatabase = new WaitTableModelQueries(conn);
+		refeshList(this.qDatabase);	
 	}
 
-	public void refeshList(Database database){
+	public void refeshList(WaitTableModelQueries qDatabase){
 		
 		List<String> stationNames = new ArrayList<String>();
 		
@@ -130,8 +132,8 @@ public class WaitTableModel extends AbstractTableModel {
 		columnNames.add("Name");
 		columnNames.add("# in group");
 		try {
-			listDate = database.getDate(); //TODO !!!!!!!!!! find a different way to select the date!!!!!!
-			stationNames = database.getStations(this.listDate);
+			listDate = qDatabase.getDate(); //TODO !!!!!!!!!! find a different way to select the date!!!!!!
+			stationNames = qDatabase.getStations(this.listDate);
 			if(stationNames != null){
 				Iterator<String> stationNameIterator = stationNames.iterator();
 				while(stationNameIterator.hasNext()){
@@ -147,7 +149,7 @@ public class WaitTableModel extends AbstractTableModel {
 		//Data populating this list
 		try {
 			List<Integer> numbers = new ArrayList<Integer>();
-			numbers = database.getListFromVisitPanty(listDate);
+			numbers = qDatabase.getListFromVisitPanty(listDate);
 			if(numbers != null){
 				Iterator<Integer> numbersIterator = numbers.iterator();
 				while(numbersIterator.hasNext()){
@@ -160,7 +162,7 @@ public class WaitTableModel extends AbstractTableModel {
 					//Get Station Check List.
 					List<Boolean> stationCheck = new ArrayList<Boolean>();
 					List<String> station = new ArrayList<String>();
-					station = database.getStationsFamilyVisit(listDate, familyNumber);
+					station = qDatabase.getStationsFamilyVisit(listDate, familyNumber);
 					if(stationNames != null && station != null){
 						Iterator<String> stationNameIterator = stationNames.iterator();
 						while(stationNameIterator.hasNext()){

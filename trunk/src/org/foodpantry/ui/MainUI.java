@@ -3,6 +3,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
@@ -55,8 +56,9 @@ public class MainUI {
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
 		
-		//Create Connection Database
-		Database database = new Database(dbConnection.getDBConnection());
+		//Create Connection to the database
+		//Database database = new Database(dbConnection.getDBConnection());
+		Connection conn = dbConnection.getDBConnection();
 		
 		// Add pane for user/admin/connection info
 		JPanel status = MainUI.createStatusPane();
@@ -67,7 +69,7 @@ public class MainUI {
 		pane.add(addFamily);
 		
 		// Create the model for the table
-		WaitTableModel model = new WaitTableModel(database);
+		WaitTableModel model = new WaitTableModel(conn);
 		// Initialize the family table and add the model to it
 		JTable waitTable = new JTable(model);
 		

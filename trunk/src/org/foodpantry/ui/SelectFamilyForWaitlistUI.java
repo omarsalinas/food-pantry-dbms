@@ -125,7 +125,7 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Add New Family")) {
-			AddFamilyUI window = new AddFamilyUI();
+			AddNewFamilyUI window = new AddNewFamilyUI();
 		} else if (e.getActionCommand().equals("Edit Family")) {
 			//TODO have something for editing family information
 		}
