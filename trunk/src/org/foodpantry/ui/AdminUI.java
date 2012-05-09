@@ -96,6 +96,10 @@ public class AdminUI {
 
 						if (insert > 0 ) {
 							System.out.println("User was added.");
+							JOptionPane.showMessageDialog(
+								    addUserButton, "Username was added",
+								    "Added User",
+								    JOptionPane.INFORMATION_MESSAGE);
 						} else {
 							System.err.println("User was not added.");
 						}
@@ -158,6 +162,10 @@ public class AdminUI {
 						}
 						if (delete > 0) {
 							System.out.println("User was deleted.");
+							JOptionPane.showMessageDialog(
+									deleteUserButton, "Username was deleted",
+								    "Deleted User",
+								    JOptionPane.INFORMATION_MESSAGE);
 						} else {
 							System.err.println("User not deleted.");
 						}
