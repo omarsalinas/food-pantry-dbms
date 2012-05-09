@@ -8,7 +8,9 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+
+import org.foodpantry.db.DBConnection;
 
 /**
  * Borrowed from:
@@ -87,7 +91,14 @@ public class LoginDialog extends JDialog {
 					            JOptionPane.INFORMATION_MESSAGE);
 					    succeeded = true;
 					    // TODO make this an actual setting...
-					    if (true) {
+					    String query = "SELECT Admin FROM C242386_foodpantry.Pantry_Security where User_Name = '" + getUsername() + "'";
+				    	//get connection to database from MainUI
+				    	DBConnection conn = MainUI.dbConnection;
+				    	//execute user authentication query
+			    		Statement stmt = conn.getDBConnection().createStatement();
+						ResultSet rs = stmt.executeQuery(query);
+						rs.next();
+					    if (rs.getInt(1) == 1) {
 					    	administrator = true;
 					    }
 					    dispose();
