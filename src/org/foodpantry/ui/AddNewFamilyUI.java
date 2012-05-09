@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -133,7 +134,7 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 	
 	private static JPanel createSaveOrCancel(){
 		JPanel saveOrCancel = new JPanel();
-		JButton btnSave = new JButton("Save");
+		final JButton btnSave = new JButton("Save");
 		saveOrCancel.add(btnSave);
 		
         btnSave.addActionListener(new ActionListener() {
@@ -141,14 +142,16 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
         		
             		System.out.println("lastname::" + lastNameTF.getText());
-            		if(lastNameTF.getText() == null || lastNameTF.getText().trim().length() < 1){
-            			System.out.println("HERE???");
-            			JFrame window = new PopUpErrorWindow("Missing Last Name, Please enter the family's last name.");
-            			window.pack();
-            			window.setVisible(true);
-            			return;
-            		}
             		
+            		//Make sure there are no blank fields  
+            		if (lastNameTF.getText().equals("")||primaryFirstNameTF.getText().equals("")
+            			||noChildrenTF.getText().equals("")||noAdultsTF.getText().equals("")
+            			|| streetTF.getText().equals("")||cityTF.getText().equals("")
+            			|| stateTF.getText().equals("")	||houseNumberTF.getText().equals("")
+            			||zipTF.getText().equals(""))
+            		{JOptionPane.showMessageDialog(btnSave, "There are blank fields on the form. Please try again.", "Blank Fields",
+            			JOptionPane.ERROR_MESSAGE);
+            		} 
         			try {
         				PreparedStatement insertStatement = null;
         				String insertSQL = "INSERT INTO Family (Last_Name, Primary_Name, No_Children, No_Adults, Creation_Time) VALUES (?, ?, ?, ?, ?)";
