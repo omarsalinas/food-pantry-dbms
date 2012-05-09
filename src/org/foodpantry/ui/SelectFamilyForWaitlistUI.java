@@ -48,12 +48,7 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		pane.setLayout(layout);
 		
 		FamilyTableModel model = null;
-//		try {
-////			model = new FamilyTableModel();
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		model = new FamilyTableModel();
 		JTable table = new JTable(model);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(
