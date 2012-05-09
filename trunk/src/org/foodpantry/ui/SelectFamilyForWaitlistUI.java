@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,7 +21,7 @@ import javax.swing.border.TitledBorder;
  * Window that lets the user choose someone to add to the waitlist.
  * TODO needs to enforce that family credentials are good before adding
  */
-public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
+public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener {
 
 	/**
 	 * Generated Serial Version UID
@@ -31,13 +32,20 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 	 * Title of JFrame
 	 */
 	private String title = "Add a family to the waitlist.";
+	
+	/**
+	 * Family IDs to be edited
+	 */
+	ArrayList<Integer> familyIDs = new ArrayList<Integer>();
+
+	FamilyTableModel model;
 
 	/**
 	 * Constructs and adds all needed elements.  Also, packs the frame.
 	 * Does not, however, set the frame to visible.
 	 * @throws HeadlessException
 	 */
-	public SelectFamilyForWaitlistUI() throws HeadlessException {
+	public SelectFamilyForWaitlistUI() throws HeadlessException {		
 		// Get the container to make following code a little easier to read
 		Container pane = this.getContentPane();
 		
@@ -47,9 +55,8 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
 		
-		FamilyTableModel model = null;
-		model = new FamilyTableModel();
-		JTable table = new JTable(model);
+		this.model = new FamilyTableModel();
+		JTable table = new JTable(this.model);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(
 				scrollPane.getBorder(), "Families",
@@ -123,12 +130,41 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		return pane; 
 	}
 	
+	private void setFamilyIDs() {
+		for (int i=0 ; i<this.model.getRowCount(); i++) {
+			if ((Boolean)this.model.getValueAt(i, 0) == true ) {
+				this.familyIDs.add((Integer)this.model.getValueAt(i, 1));
+			}
+		}
+		/*
+		 * INSERT INTO Visit_Pantry
+		 * VALUES (value, value),
+		 * VALUES (value, value);
+		 */
+		String sql = "INSERT INTO ";
+		try {
+			MainUI.dbConnection.connection.prepareStatement(sql).execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("SelectFamilyForWaitlistUI: Failed to execute query");
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Add New Family")) {
 			AddNewFamilyUI window = new AddNewFamilyUI();
 		} else if (e.getActionCommand().equals("Edit Family")) {
 			//TODO have something for editing family information
+		} else if (e.getActionCommand().equals("Add Selection")) {
+			this.setFamilyIDs();
+			for(int i : familyIDs) {
+				if ( i != 0) {
+					System.out.println(i);
+				}
+			}
+			this.dispose();
 		}
 	}
 
