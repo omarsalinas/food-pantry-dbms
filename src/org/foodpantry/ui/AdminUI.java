@@ -24,6 +24,9 @@ public class AdminUI {
 	private static Statement stmt = null;
 
 	
+	public AdminUI(){
+		createAndShowGUI();
+	}
 	/**
 	 * Create a pane that allows users to be added
 	 */
@@ -201,7 +204,7 @@ public class AdminUI {
 	protected static void createAndShowGUI() {
 		// Create and set up the window.
 		JFrame frame = new JFrame("Administrative Services");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Set up the content pane.
 		addComponentsToPane(frame.getContentPane());
 		// Display the window.
