@@ -10,8 +10,6 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
 
-import org.foodpantry.ui.WaitTableModel.Reorderable;
-
 
 /**
  * 

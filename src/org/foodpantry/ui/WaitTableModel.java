@@ -13,7 +13,7 @@ import java.util.List;
  * The table model to represent the family and waitlist information to be 
  * displayed on the waitlist
  */
-public class WaitTableModel extends AbstractTableModel {
+public class WaitTableModel extends AbstractTableModel implements Reorderable {
 
 	/**
 	 * Default serial version UID
@@ -262,10 +262,16 @@ public class WaitTableModel extends AbstractTableModel {
 		listData.toArray()[row] = data;
 	}
 
+	@Override
+	public void reorder(int fromIndex, int toIndex) {
+		
+		
+	}
+
 	/**
 	 * Used by the TransferHandler to support reordering.
 	 */
-	public interface Reorderable {
-		public void reorder(int fromIndex, int toIndex);
-	}
+//	public interface Reorderable {
+//		public void reorder(int fromIndex, int toIndex);
+//	}
 }
