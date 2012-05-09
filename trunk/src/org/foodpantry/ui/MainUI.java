@@ -3,17 +3,21 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.sql.Connection;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SpringLayout;
+import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 
 import org.foodpantry.db.DBConnection;
@@ -78,6 +82,19 @@ public class MainUI {
 		waitTable.setTransferHandler(new WaitListTransferHandler(waitTable));
 		waitTable.setDragEnabled(true);
 		waitTable.setDropMode(DropMode.INSERT_ROWS);
+		
+		waitTable.addMouseMotionListener(new MouseMotionListener() {
+		    public void mouseDragged(MouseEvent e) {
+		    	e.consume();
+		    	JComponent c = (JComponent) e.getSource();
+		        TransferHandler handler = c.getTransferHandler();
+		        handler.exportAsDrag(c, e, TransferHandler.MOVE);
+		    }
+
+		    public void mouseMoved(MouseEvent e) {
+		    }
+		});
+		
 		
 		// Create and setup a scrollpane, and add the table to it
 		JScrollPane scrollPane = new JScrollPane(waitTable);
