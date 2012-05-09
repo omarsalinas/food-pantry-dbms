@@ -108,7 +108,8 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener{
 		JPanel pane = new JPanel();
 
 		JButton addNewFamilyBtn = new JButton("Add New Family");
-		addNewFamilyBtn.addActionListener(this); 
+		//addNewFamilyBtn.addActionListener(this);
+		addNewFamilyBtn.addActionListener(new openWindow());
 		addNewFamilyBtn.setActionCommand("Add New Family");
 		addNewFamilyBtn.setMnemonic(KeyEvent.VK_A);
 		pane.add(addNewFamilyBtn);
