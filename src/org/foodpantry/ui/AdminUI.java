@@ -33,21 +33,34 @@ public class AdminUI {
 	private static JPanel adminAddUserPane() {
 		JPanel addUserPane = new JPanel();
 
-		// Add user label
-		JLabel addLabel = new JLabel();
-		addLabel.setText("Add User:");
-		addUserPane.add(addLabel);
+		// Add username label
+		JLabel usernameLabel = new JLabel();
+		usernameLabel.setText("Username:");
+		addUserPane.add(usernameLabel);
 		
 		// Add user name text field
 		final JTextField usernameTextField = new JTextField(10);
+		usernameTextField.setToolTipText("username to add");
 		addUserPane.add(usernameTextField);
 
+		// Add password label
+		JLabel passwordLabel = new JLabel();
+		passwordLabel.setText("Password:");
+		addUserPane.add(passwordLabel);
+				
 		// Add password field
 		final JPasswordField passwordField = new JPasswordField(10);
+		passwordField.setToolTipText("password field");
 		addUserPane.add(passwordField);
+		
+		// Add administrator label
+		JLabel adminLabel = new JLabel();
+		adminLabel.setText("Admin?:");
+		addUserPane.add(adminLabel);
 		
 		final JCheckBox adminBox = new JCheckBox();
 		adminBox.setSelected(false);
+		adminBox.setToolTipText("administrator?");
 		addUserPane.add(adminBox);
 		
 		final JButton addUserButton = new JButton("Add User");
@@ -104,6 +117,9 @@ public class AdminUI {
 							System.err.println("User was not added.");
 						}
 					}
+					usernameTextField.setText("");
+					passwordField.setText("");
+					adminBox.setSelected(false);
 				}
 				else {
 					//display error say a user name and password must be entered to add
@@ -127,13 +143,14 @@ public class AdminUI {
 	private static JPanel adminDeleteUserPane() {
 		JPanel deleteUserPane = new JPanel();
 		
-		// Delete Label
+		// Delete username Label
 		JLabel deleteLabel = new JLabel();
-		deleteLabel.setText("Delete User:");
+		deleteLabel.setText("Username to delete:");
 		deleteUserPane.add(deleteLabel);
 		
 		// Delete user name text field
 		final JTextField usernameTextField = new JTextField(10);
+		usernameTextField.setToolTipText("username to delete");
 		deleteUserPane.add(usernameTextField);
 
 		// Delete  user button
@@ -170,6 +187,7 @@ public class AdminUI {
 							System.err.println("User not deleted.");
 						}
 					}
+					usernameTextField.setText("");
 				}
 
 				else {
