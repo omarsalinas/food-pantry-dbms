@@ -114,10 +114,10 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	
 	WaitTableModel(Connection conn){
 		this.qDatabase = new WaitTableModelQueries(conn);
-		refeshList(this.qDatabase);	
+		refeshList();	
 	}
 
-	public void refeshList(WaitTableModelQueries qDatabase){
+	public void refeshList(){
 		
 		List<String> stationNames = new ArrayList<String>();
 		
