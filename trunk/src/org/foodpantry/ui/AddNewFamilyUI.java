@@ -74,6 +74,9 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 		DBConnection dbConn	= new DBConnection();
 		conn = dbConn.getDBConnection();
 		
+		java.sql.Date date = new java.sql.Date(System.currentTimeMillis()); 
+		System.out.println("DATE::" + date);
+		
 		//set parent pane to springlayout
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
