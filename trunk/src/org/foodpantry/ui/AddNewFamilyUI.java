@@ -7,12 +7,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -42,7 +42,7 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 	static JTextField zipTF;
 	
 	static Connection conn;
-	static java.sql.Date todaysDate = getTodaysDate(5, 4, 2012);
+	static java.sql.Date todaysDate = new java.sql.Date(System.currentTimeMillis());
 	static JFrame frame;
 
 	
@@ -54,15 +54,6 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 		//set date
 	//}
 	
-	//Needs to be changed to retrieve the correct date
-	public static java.sql.Date getTodaysDate(int month, int date, int year){
-		java.sql.Date fulldate = new java.sql.Date(0);
-		fulldate.setDate(date);
-		fulldate.setMonth(month - 1);
-		fulldate.setYear(year - 1900);
-		return fulldate;
-	}
-	
 	public AddNewFamilyUI() {
 		
 		Container pane = this.getContentPane();
@@ -73,10 +64,7 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 		
 		DBConnection dbConn	= new DBConnection();
 		conn = dbConn.getDBConnection();
-		
-		java.sql.Date date = new java.sql.Date(System.currentTimeMillis()); 
-		System.out.println("DATE::" + date);
-		
+
 		//set parent pane to springlayout
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
@@ -234,13 +222,13 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
             }
         });
 		
-		JButton btnCancel = new JButton("Cancel");
+		/*JButton btnCancel = new JButton("Cancel");
 		saveOrCancel.add(btnCancel);
 		btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	//dispose();
             }
-		});
+		});*/
 		return saveOrCancel;
 	}
 	
@@ -283,7 +271,7 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 
         //Number of Adults in the family
         JLabel noAdults;
-        
+       
     	noAdults = new JLabel("Number of Adults: ");
         cs.gridx = 0;
         cs.gridy = 2;
@@ -313,18 +301,42 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         familyPanel.add(noChildrenTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
         
+        //Address drop down menu
+        JLabel addresses;
+        
+        addresses = new JLabel("Addesses: ");
+        cs.gridx = 0;
+        cs.gridy = 4;
+        cs.gridwidth = 1;
+        familyPanel.add(addresses, cs);
+        
+        String[] example = {
+                "one",
+                "two",
+                "new address"
+       };
+
+	    JComboBox addressDropDown = new JComboBox(example);
+	    addressDropDown.setEditable(true);
+	    addressDropDown.addActionListener(new AddressComboBoxListener());
+        cs.gridx = 1;
+        cs.gridy = 4;
+        cs.gridwidth = 1;
+        familyPanel.add(addressDropDown, cs);
+        familyPanel.setBorder(new LineBorder(Color.GRAY));
+        
         //House Number
         JLabel houseNumber;
         
     	houseNumber = new JLabel("House Number: ");
         cs.gridx = 0;
-        cs.gridy = 4;
+        cs.gridy = 5;
         cs.gridwidth = 1;
         familyPanel.add(houseNumber, cs);
 
         houseNumberTF = new JTextField(20);
         cs.gridx = 1;
-        cs.gridy = 4;
+        cs.gridy = 5;
         cs.gridwidth = 1;
         familyPanel.add(houseNumberTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
@@ -334,13 +346,13 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
        
     	street = new JLabel("Street: ");
         cs.gridx = 0;
-        cs.gridy = 5;
+        cs.gridy = 6;
         cs.gridwidth = 1;
         familyPanel.add(street, cs);
 
         streetTF = new JTextField(20);
         cs.gridx = 1;
-        cs.gridy = 5;
+        cs.gridy = 6;
         cs.gridwidth = 1;
         familyPanel.add(streetTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
@@ -350,13 +362,13 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         
     	city = new JLabel("City: ");
         cs.gridx = 0;
-        cs.gridy = 6;
+        cs.gridy = 7;
         cs.gridwidth = 1;
         familyPanel.add(city, cs);
 
         cityTF = new JTextField(20);
         cs.gridx = 1;
-        cs.gridy = 6;
+        cs.gridy = 7;
         cs.gridwidth = 1;
         familyPanel.add(cityTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
@@ -367,13 +379,13 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         
     	state = new JLabel("State: ");
         cs.gridx = 0;
-        cs.gridy = 7;
+        cs.gridy = 8;
         cs.gridwidth = 1;
         familyPanel.add(state, cs);
 
         stateTF = new JTextField(20);
         cs.gridx = 1;
-        cs.gridy = 7;
+        cs.gridy = 8;
         cs.gridwidth = 1;
         familyPanel.add(stateTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
@@ -383,13 +395,13 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         
     	zip = new JLabel("Zip: ");
         cs.gridx = 0;
-        cs.gridy = 8;
+        cs.gridy = 9;
         cs.gridwidth = 1;
         familyPanel.add(zip, cs);
 
         zipTF = new JTextField(20);
         cs.gridx = 1;
-        cs.gridy = 8;
+        cs.gridy = 9;
         cs.gridwidth = 1;
         familyPanel.add(zipTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
@@ -429,6 +441,15 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+}
+
+class AddressComboBoxListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("HERE");
 	}
 	
 }

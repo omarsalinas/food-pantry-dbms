@@ -269,11 +269,6 @@ class openWindow implements ActionListener {
 			window.pack();
 			window.setVisible(true);
 		}
-		if (e.getActionCommand().equals("Add New Family")) {
-			JFrame window = new AddNewFamilyUI();
-			window.pack();
-			window.setVisible(true);
-		}
 		if (e.getActionCommand().equals("Admin")) {
 			new AdminUI();
 		}
