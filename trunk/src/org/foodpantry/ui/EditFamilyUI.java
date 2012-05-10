@@ -128,8 +128,17 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 		
 		private static void refreshFamilyInfo(){
 			
-			// TODO get family number
 			int familyNumber = 1;
+			// Iterate over the list of families
+			for (int i=0 ; i<SelectFamilyForWaitlistUI.model.getRowCount(); i++) {
+				// if a row was selected, append to the sql statement
+				if ((Boolean)SelectFamilyForWaitlistUI.model.getValueAt(i, 0) == true ) {
+					// once a selection is found, all following will need a comma
+					// prepended
+					familyNumber = (Integer) SelectFamilyForWaitlistUI.model.getValueAt(i,1);
+					break;
+				}
+			}
 			
 			PreparedStatement selectStatement;
 			ResultSet resultSet;
