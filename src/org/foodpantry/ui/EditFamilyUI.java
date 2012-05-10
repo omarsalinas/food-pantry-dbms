@@ -24,6 +24,7 @@ import org.foodpantry.db.DBConnection;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class EditFamilyUI extends JFrame implements ActionListener{
@@ -149,6 +150,7 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 				selectStatement = conn.prepareStatement(querySQL);
 				selectStatement.setInt(1, familyNumber);
 				resultSet = selectStatement.executeQuery();
+				Boolean first = true;
 				while(resultSet.next()){
 					String houseNum = resultSet.getString("House_Number");
 					String street = resultSet.getString("Street");
@@ -160,6 +162,14 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 			        		resultSet.getString("Zip"),
 			        		resultSet.getString("Current")
 			       };
+			        if(first == true){
+			    		houseNumberTF.setText(addr[0]);
+			    		streetTF.setText(addr[1]);
+			    		cityTF.setText(addr[2]);
+			    		stateTF.setText(addr[3]);
+			    		zipTF.setText(addr[4]);
+			    		first = false;
+			        }
 			        addressList.add(addr);
 			        dropdownAddrList.add(houseNum + " " + street);
 				}
@@ -357,7 +367,30 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 
 		    JComboBox addressDropDown = new JComboBox(dropdownAddrList.toArray());
 		    addressDropDown.setEditable(true);
-		    addressDropDown.addActionListener(new AddressComboBoxListener());
+		    //addressDropDown.addActionListener(new AddressComboBoxListener());
+		    addressDropDown.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	            	String selectItem =((JComboBox) e.getSource()).getSelectedItem().toString();
+	            	System.out.println("Selected::" + selectItem);
+	    			if(addressList != null){
+	    				Iterator<String[]> addrItr = addressList.iterator();
+	    				while(addrItr.hasNext()){
+	    					String [] addr = addrItr.next();
+	    					String houseNum = addr[0];
+	    					String street = addr[1];
+	    					String comp = new String(houseNum + " " + street);
+	    					if(selectItem.equals(comp)){
+	    						houseNumberTF.setText(addr[0]);
+	    						streetTF.setText(addr[1]);
+	    						cityTF.setText(addr[2]);
+	    						stateTF.setText(addr[3]);
+	    						zipTF.setText(addr[4]);
+	    						return;
+	    					}
+	    				}
+	    			}
+	            }
+			});
 	        cs.gridx = 1;
 	        cs.gridy = 4;
 	        cs.gridwidth = 1;
@@ -474,7 +507,7 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			
+			System.out.println("here");
 		}
 }
 
