@@ -54,6 +54,8 @@ public class MainUI {
 	
 	protected static DBConnection dbConnection;
 	
+	protected static WaitTableModel model;
+	
 	static java.sql.Date todaysDate = new java.sql.Date(System.currentTimeMillis());
 	
 	/**
@@ -78,7 +80,7 @@ public class MainUI {
 		pane.add(addFamily);
 		
 		// Create the model for the table
-		WaitTableModel model = new WaitTableModel(conn);
+		model = new WaitTableModel(conn);
 		
 		// Initialize the family table and add the model to it
 		JTable waitTable = new JTable(model);
