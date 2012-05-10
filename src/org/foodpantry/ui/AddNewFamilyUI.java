@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -301,29 +300,7 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         familyPanel.add(noChildrenTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
         
-        //Address drop down menu
-        JLabel addresses;
-        
-        addresses = new JLabel("Addesses: ");
-        cs.gridx = 0;
-        cs.gridy = 4;
-        cs.gridwidth = 1;
-        familyPanel.add(addresses, cs);
-        
-        String[] example = {
-                "one",
-                "two",
-                "new address"
-       };
-
-	    JComboBox addressDropDown = new JComboBox(example);
-	    addressDropDown.setEditable(true);
-	    addressDropDown.addActionListener(new AddressComboBoxListener());
-        cs.gridx = 1;
-        cs.gridy = 4;
-        cs.gridwidth = 1;
-        familyPanel.add(addressDropDown, cs);
-        familyPanel.setBorder(new LineBorder(Color.GRAY));
+        //Only one address is allowed to be entered for a new family.
         
         //House Number
         JLabel houseNumber;
