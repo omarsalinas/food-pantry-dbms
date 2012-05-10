@@ -139,7 +139,7 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
             			||noChildrenTF.getText().equals("")||noAdultsTF.getText().equals("")
             			|| streetTF.getText().equals("")||cityTF.getText().equals("")
             			|| stateTF.getText().equals("")	||houseNumberTF.getText().equals("")
-            			||zipTF.getText().equals(""))
+            			||zipTF.getText().equals("")|| phoneTF.getText().equals(""))
             		{JOptionPane.showMessageDialog(btnSave, "There are blank fields on the form. Please try again.", "Blank Fields",
             			JOptionPane.ERROR_MESSAGE);
             		} 
@@ -210,7 +210,30 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         			catch (SQLException e1) {
         				// TODO Auto-generated catch block
         				e1.printStackTrace();
-        			}     
+        			}
+        			
+        			//insert phone
+        			try{
+        				PreparedStatement insertStatement = null;
+        				String insertSQL = "INSERT INTO Family_Phone_Number (Family_Number, Phone_Number, Type, Creation_time, Current) Values(?,?,?,?,?)";
+        				insertStatement = conn.prepareStatement(insertSQL);
+        				insertStatement.setInt(1, familyNumber);
+        				insertStatement.setInt(2, Integer.parseInt(phoneTF.getText()));
+        				insertStatement.setString(3, "Primary");
+        				insertStatement.setDate(4, todaysDate);
+        				insertStatement.setBoolean(5,true);
+        				insertStatement.executeUpdate();
+        			}
+        			//ensure phone number is numeric
+        			catch(NumberFormatException nFE)
+        			{
+        				JOptionPane.showMessageDialog(btnSave, "Phone Number must be numeric.",
+        						"Input Error", JOptionPane.ERROR_MESSAGE);
+        			}
+        			catch(SQLException e1) {
+        				// TODO Auto-generated catch block
+        				e1.printStackTrace();
+        			}
         }
         else{
         	
