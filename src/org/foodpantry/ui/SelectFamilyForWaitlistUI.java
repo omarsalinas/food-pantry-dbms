@@ -148,7 +148,7 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener 
 		
 		// Create Current Date String
 		Date todayDate = new Date();
-		DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		String currDate = dateFormatter.format(todayDate);
 		
 		// Create Current Time String
@@ -190,6 +190,8 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener 
 		try {
 			if (selectionExists) {
 				MainUI.dbConnection.connection.prepareStatement(sql).execute();
+				// need to refresh the waitlist
+				MainUI.model.refeshList();
 			}
 		} catch (SQLException e) {
 			System.out.println("SelectFamilyForWaitlistUI: Failed to execute query");
