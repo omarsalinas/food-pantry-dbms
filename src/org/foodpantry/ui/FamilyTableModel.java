@@ -1,16 +1,8 @@
 package org.foodpantry.ui;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
 
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.DatabaseMetaData;
-import com.mysql.jdbc.Statement;
 
 /**
  * The table model to represent the family information to be displayed when 

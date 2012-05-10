@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.sql.Connection;
+import java.sql.Date;
+import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
@@ -54,6 +56,7 @@ public class MainUI {
 	/**
 	 * Add all of the components to the pane to create the main GUI.
 	 * @param pane - <code>Container</code> the components are being added to.
+	 * @throws ParseException 
 	 */
 	public static void addComponentsToPane(Container pane) {		
 		//set parent pane layout to springlayout
@@ -61,7 +64,6 @@ public class MainUI {
 		pane.setLayout(layout);
 		
 		//Create Connection to the database
-		//Database database = new Database(dbConnection.getDBConnection());
 		Connection conn = dbConnection.getDBConnection();
 		
 		// Add pane for user/admin/connection info
@@ -74,6 +76,7 @@ public class MainUI {
 		
 		// Create the model for the table
 		WaitTableModel model = new WaitTableModel(conn);
+		
 		// Initialize the family table and add the model to it
 		JTable waitTable = new JTable(model);
 		

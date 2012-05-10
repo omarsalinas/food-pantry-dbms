@@ -40,13 +40,11 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	class ListData{
 		int orderNumber;
 		int familyNumber;
-//		int numberInGroup;
 		List<Boolean> stations;
 		
 		ListData(int order, int familyNumber, List<Boolean> stations){
 			this.orderNumber = order;
 			this.familyNumber = familyNumber;
-//			this.numberInGroup = number;
 			this.stations = stations;
 		}
 		
@@ -115,9 +113,6 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	}
 	
 	WaitTableModel(Connection conn){
-		//TODO I am having trouble finding a good way to enter the 
-		//date into the database. -Lynn
-		
 		this.qDatabase = new WaitTableModelQueries(conn);
 		refeshList(this.qDatabase);	
 	}
@@ -132,7 +127,7 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 		columnNames.add("Name");
 		columnNames.add("# in group");
 		try {
-			listDate = qDatabase.getDate(); //TODO !!!!!!!!!! find a different way to select the date!!!!!!
+			listDate = getTodaysDate();
 			stationNames = qDatabase.getStations(this.listDate);
 			if(stationNames != null){
 				Iterator<String> stationNameIterator = stationNames.iterator();
@@ -269,5 +264,12 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	public void reorder(int fromIndex, int toIndex) {
 		listData.add(toIndex, listData.get(fromIndex));
 		listData.remove(fromIndex);
+	}
+	
+	public Date getTodaysDate(){
+		java.util.Date date = new java.util.Date();
+		java.sql.Date todaysDate = new java.sql.Date(date.getTime());
+		System.out.println("Today's Date::" + todaysDate);
+		return todaysDate;
 	}
 }
