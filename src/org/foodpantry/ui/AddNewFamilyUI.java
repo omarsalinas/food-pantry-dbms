@@ -39,6 +39,7 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 	static JTextField cityTF;
 	static JTextField stateTF;
 	static JTextField zipTF;
+	static JTextField phoneTF;
 	
 	static Connection conn;
 	static java.sql.Date todaysDate = new java.sql.Date(System.currentTimeMillis());
@@ -383,6 +384,21 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
         familyPanel.add(zipTF, cs);
         familyPanel.setBorder(new LineBorder(Color.GRAY));
 
+        //phone
+        JLabel phone;
+        
+    	phone = new JLabel("Phone: ");
+        cs.gridx = 0;
+        cs.gridy = 10;
+        cs.gridwidth = 1;
+        familyPanel.add(phone, cs);
+        
+        phoneTF = new JTextField(20);
+        cs.gridx = 1;
+        cs.gridy = 10;
+        cs.gridwidth = 1;
+        familyPanel.add(phoneTF, cs);
+        familyPanel.setBorder(new LineBorder(Color.GRAY));
 		return familyPanel;
   	}
 
