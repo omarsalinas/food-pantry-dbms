@@ -230,7 +230,7 @@ public class AdminUI {
 		modifyUserPane.add(modifyUserButton);
 		modifyUserButton.addActionListener(new ActionListener() {
 			
-			int admin;
+			boolean admin;
 			String name;
 			String password;
 			// Get connection to database from MainUI
@@ -242,7 +242,7 @@ public class AdminUI {
 				for ( int i = 0; i < model.getRowCount(); i++){
 					for (int j = 0; j < model.getColumnCount(); j++){						
 						if(j==2){
-						      admin = Integer.parseInt((model.getValueAt(i, j).toString()));
+						      admin = (Boolean) model.getValueAt(i, j);
 						}
 						else if (j==0){
 						      name = (String) model.getValueAt(i, j);
@@ -260,7 +260,7 @@ public class AdminUI {
 						  System.out.println("Modifying user FAILED" + s.toString());
 					}
 				}
-				// display error say a user name must be entered to delete
+				// display a modify success message
 				JOptionPane.showMessageDialog(
 						modifyUserButton, "Modify Complete!",
 					    "Success",
