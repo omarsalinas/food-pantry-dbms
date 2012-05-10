@@ -173,6 +173,7 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 			        addressList.add(addr);
 			        dropdownAddrList.add(houseNum + " " + street);
 				}
+				dropdownAddrList.add("Add New Address");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -244,7 +245,7 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	    			
 	        			// TODO
 	        			// ensure city = Elkridge, state = MD, zip = 21076
-	        			try {
+	        			/*try {
 	        				PreparedStatement insertStatement = null;
 	        				String insertSQL = "INSERT INTO Family_Address (Family_Number, House_Number, Street, City, State, Zip, Creation_Time) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	        				insertStatement = conn.prepareStatement(insertSQL);  //having trouble with date
@@ -266,7 +267,7 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        			catch (SQLException e1) {
 	        				// TODO Auto-generated catch block
 	        				e1.printStackTrace();
-	        			}     
+	        			}*/     
 	        }
 	        else{
 	        	
@@ -278,6 +279,49 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	            }
 	        });
 			
+	        JButton saveAddressBtn = new JButton("Save Address");
+			saveOrCancel.add(saveAddressBtn);
+			saveAddressBtn.addActionListener(new ActionListener() {
+				String houseNum = houseNumberTF.getText();
+				String street = streetTF.getText();
+	            public void actionPerformed(ActionEvent e) {
+
+	            /*try{
+    				PreparedStatement insertStatement = null;
+    				String insertSQL = "INSERT INTO Family_Address (Family_Number, House_Number, Street, City, State, Zip, Creation_Time) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    				insertStatement = conn.prepareStatement(insertSQL);  //having trouble with date
+    				insertStatement.setInt(1, familyNumber);
+    				insertStatement.setInt(2, Integer.parseInt(houseNumberTF.getText()));
+    				insertStatement.setString(3, streetTF.getText());
+    				insertStatement.setString(4, cityTF.getText());
+    				insertStatement.setString(5, stateTF.getText());
+    				insertStatement.setString(6, zipTF.getText());
+    				insertStatement.setDate(7, todaysDate);
+    				insertStatement.executeUpdate();
+    			} 
+    			//ensure house number is numeric
+    			catch(NumberFormatException nFE)
+    			{
+    				JOptionPane.showMessageDialog(btnSave, "House Number must be numeric.",
+    						"Input Error", JOptionPane.ERROR_MESSAGE);
+    			}
+    			catch (SQLException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}*/
+	            	
+	            	System.out.println("here");
+		    		String [] addrArray ={
+	            	houseNum,
+	            	street,
+		    		cityTF.getText(),
+		    		stateTF.getText(),
+		    		zipTF.getText()};
+		        addressList.add(addrArray);
+		        dropdownAddrList.add(houseNum + " " + street);
+	            } 
+			});
+	        
 			/*JButton btnCancel = new JButton("Cancel");
 			saveOrCancel.add(btnCancel);
 			btnCancel.addActionListener(new ActionListener() {
@@ -385,6 +429,14 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	    						cityTF.setText(addr[2]);
 	    						stateTF.setText(addr[3]);
 	    						zipTF.setText(addr[4]);
+	    						return;
+	    					}
+	    					else if(selectItem.equals("Add New Address")){
+	    						houseNumberTF.setText("");
+	    						streetTF.setText("");
+	    						cityTF.setText("");
+	    						stateTF.setText("");
+	    						zipTF.setText("");
 	    						return;
 	    					}
 	    				}
