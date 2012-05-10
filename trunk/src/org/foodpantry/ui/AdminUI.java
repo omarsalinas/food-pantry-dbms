@@ -215,13 +215,55 @@ public class AdminUI {
 	 */
 	private static JPanel adminModifyUserPane() {
 		JPanel modifyUserPane = new JPanel();
-		AdminTableModel model = new AdminTableModel();
+		final AdminTableModel model = new AdminTableModel();
 		JTable table = new JTable(model);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(
 				scrollPane.getBorder(), "Modify Users",
 				TitledBorder.LEFT, TitledBorder.TOP));
 		modifyUserPane.add(scrollPane);
+		
+
+		// Modify   user button
+		final JButton modifyUserButton = new JButton("Modify!");
+		modifyUserPane.add(modifyUserButton);
+		modifyUserButton.addActionListener(new ActionListener() {
+			
+			Integer admin;
+			String name;
+			String password;
+			// Get connection to database from MainUI
+			DBConnection conn = MainUI.dbConnection;
+
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				for ( int i = 0; i < model.getRowCount(); i++){
+					for (int j = 0; j < model.getColumnCount(); j++){						
+						if(j == 2){
+						      admin = (Integer) model.getValueAt(i, j);
+						}
+						else if (j==0){
+						      name = (String) model.getValueAt(i, j);
+						}
+						else if (j==1){
+						      password = (String) model.getValueAt(i, j);
+						}
+					}
+					String insert = "UPDATE Pantry_Security SET Password = '" + password + "', Admin = " + admin + " WHERE User_Name = '" + name + "'";
+					System.out.println(insert);
+					try {
+						stmt = conn.getDBConnection().createStatement();
+						stmt.executeUpdate(insert);
+					} catch (SQLException s) {
+						  System.out.println("Modifying user FAILED" + s.toString());
+					}
+
+
+				}		
+			}
+			
+		});
 		return modifyUserPane;
 	}
 	
