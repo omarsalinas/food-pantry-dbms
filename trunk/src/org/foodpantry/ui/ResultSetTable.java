@@ -12,8 +12,7 @@ public class ResultSetTable extends JTable{
  
   private final DefaultTableModel dataModel;
  
-  public ResultSetTable(ResultSet rs)
-                       throws SQLException{
+  public ResultSetTable(ResultSet rs) throws SQLException{
  
     super();
     dataModel = new DefaultTableModel();
