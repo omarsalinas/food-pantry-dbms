@@ -181,7 +181,7 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		this.fireTableDataChanged();
 	}
 	
 	/**
