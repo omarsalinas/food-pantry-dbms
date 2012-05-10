@@ -52,9 +52,10 @@ public class EditFamilyUI extends JFrame implements ActionListener {
 	static java.sql.Date todaysDate = new java.sql.Date(
 			System.currentTimeMillis());
 	static JFrame frame;
-
+	
 	public EditFamilyUI() {
 
+		
 		Container pane = this.getContentPane();
 
 		// Set JFrame Configuration
