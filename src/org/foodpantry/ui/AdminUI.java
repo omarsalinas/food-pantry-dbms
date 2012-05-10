@@ -214,7 +214,7 @@ public class AdminUI {
 	 * Create a pane that allows users to be modified
 	 */
 	private static JPanel adminModifyUserPane() {
-		JPanel modifyUserPane = new JPanel();
+		final JPanel modifyUserPane = new JPanel();
 		final AdminTableModel model = new AdminTableModel();
 		JTable table = new JTable(model);
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -229,7 +229,7 @@ public class AdminUI {
 		modifyUserPane.add(modifyUserButton);
 		modifyUserButton.addActionListener(new ActionListener() {
 			
-			Integer admin;
+			int admin;
 			String name;
 			String password;
 			// Get connection to database from MainUI
@@ -240,8 +240,8 @@ public class AdminUI {
 			public void actionPerformed(ActionEvent arg0) {
 				for ( int i = 0; i < model.getRowCount(); i++){
 					for (int j = 0; j < model.getColumnCount(); j++){						
-						if(j == 2){
-						      admin = (Integer) model.getValueAt(i, j);
+						if(j==2){
+						      admin = Integer.parseInt((model.getValueAt(i, j).toString()));
 						}
 						else if (j==0){
 						      name = (String) model.getValueAt(i, j);
@@ -258,11 +258,8 @@ public class AdminUI {
 					} catch (SQLException s) {
 						  System.out.println("Modifying user FAILED" + s.toString());
 					}
-
-
-				}		
+				}
 			}
-			
 		});
 		return modifyUserPane;
 	}
