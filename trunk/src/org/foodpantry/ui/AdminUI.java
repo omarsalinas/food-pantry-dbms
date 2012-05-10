@@ -3,6 +3,8 @@ package org.foodpantry.ui;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -207,13 +209,52 @@ public class AdminUI {
 	/**
 	 * Create a pane that allows users to be modified
 	 */
-	private static JPanel adminModifyUserPane() {
+	private static ResultSetTable adminModifyUserPane() {
 		JPanel modifyUserPane = new JPanel();
 		
-		//Scroll Pane
+		String[] columnNames = {"Username",
+                "Password",
+                "Administrator"};		
+		
+		// Query to populate the table
+		String getUsers = "SELECT * FROM Pantry_Security";
+
+		// Get connection to database from MainUI
+		DBConnection conn = MainUI.dbConnection;
+
+		//Result set to store data
+		ResultSet rs = null;
+		ResultSetTable rst = null;
+		
+		// proceed only if connection was successful
+		if (conn.Success) {
+			// execute delete
+			try {
+				stmt = conn.getDBConnection().createStatement();
+				rs = stmt.executeQuery(getUsers);
+				rst = new ResultSetTable(rs);
+				
+//				// Get metadata on result
+//				metadata = rs.getMetaData();       
+//				// How many columns?
+//				numcols = metadata.getColumnCount();
+//				// How many rows?
+//				numrows = rs.getRow();             
+//				rs.next();
+//				
+//				while( ! rs.isAfterLast() ){
+//					System.out.println(rs.getString("User_Name").toString());
+//					rs.next();
+//				}
+				
+				
+			} catch (SQLException s) {
+				  System.out.println("Error getting admin users" + s.toString());
+			}
+		}
 		
 		
-		return modifyUserPane;
+		return rst;
 	}
 	
 	public static void main(String[] args) {
@@ -251,6 +292,10 @@ public class AdminUI {
 		JPanel deleteUser = AdminUI.adminDeleteUserPane();
 		pane.add(deleteUser);
 		
+		// Add delete user pane
+		ResultSetTable modifyUser = AdminUI.adminModifyUserPane();
+		pane.add(modifyUser);
+		
 		// Standard padding for the elements
 		int padding = 5;
 		// constraints on the placement of the status bar
@@ -264,9 +309,15 @@ public class AdminUI {
 		layout.putConstraint(SpringLayout.NORTH, deleteUser,
 				 padding,SpringLayout.SOUTH, addUser);
 		
+		layout.putConstraint(SpringLayout.WEST, modifyUser,
+				 padding,SpringLayout.WEST, pane);
+		layout.putConstraint(SpringLayout.NORTH, modifyUser,
+				 padding,SpringLayout.SOUTH, deleteUser);
+		
+		
 		// Constrain the pane to the internal elements
 		layout.putConstraint(SpringLayout.SOUTH, pane,
-				 padding, SpringLayout.SOUTH, deleteUser);
+				 padding, SpringLayout.SOUTH, modifyUser);
 		layout.putConstraint(SpringLayout.EAST, pane,
 				 padding, SpringLayout.EAST, addUser);
 	}
