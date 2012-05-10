@@ -1,4 +1,5 @@
 package org.foodpantry.ui;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * The table model to represent the family and waitlist information to be 
+ * The table model to represent the family and waitlist information to be
  * displayed on the waitlist
  */
 public class WaitTableModel extends AbstractTableModel implements Reorderable {
@@ -19,9 +20,9 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	 * Default serial version UID
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private WaitTableModelQueries qDatabase = null;
-	
+
 	/**
 	 * Date for the list
 	 **/
@@ -36,27 +37,26 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	 * A list of the class ListData which contains the data for each row.
 	 */
 	private List<ListData> listData = new ArrayList<ListData>();
-	
-	class ListData{
+
+	class ListData {
 		int orderNumber;
 		int familyNumber;
 		List<Boolean> stations;
-		
-		ListData(int order, int familyNumber, List<Boolean> stations){
+
+		ListData(int order, int familyNumber, List<Boolean> stations) {
 			this.orderNumber = order;
 			this.familyNumber = familyNumber;
 			this.stations = stations;
 		}
-		
-		private Object getColumn(int col){
-			switch(col){
+
+		private Object getColumn(int col) {
+			switch (col) {
 			case 0:
 				return this.orderNumber;
-			case 1:				
+			case 1:
 				try {
 					return qDatabase.getFamilyLastName(this.familyNumber);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return "error";
 				}
@@ -64,64 +64,67 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 				try {
 					return qDatabase.getNoInFamily(this.familyNumber);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return "error";
 				}
 			default:
-				if(this.stations != null && this.stations.toArray().length >= (col - 3))
+				if (this.stations != null
+						&& this.stations.toArray().length >= (col - 3))
 					return this.stations.toArray()[(col - 3)];
 			}
 			return false;
 		}
-		
-		private void setColumn(int col, Object value){
-			switch(col){
+
+		private void setColumn(int col, Object value) {
+			switch (col) {
 			case 0:
 				this.orderNumber = (Integer) value;
 				break;
 			case 1:
-				//this.familyNumber = (Integer) value;
+				// this.familyNumber = (Integer) value;
 				break;
 			case 2:
-				//this.numberInGroup = (Integer) value;
+				// this.numberInGroup = (Integer) value;
 				break;
 			default:
-				if(this.stations != null && this.stations.toArray().length >= (col - 3)){
-					Iterator<Boolean> stationIterator = this.stations.iterator();
+				if (this.stations != null
+						&& this.stations.toArray().length >= (col - 3)) {
+					Iterator<Boolean> stationIterator = this.stations
+							.iterator();
 					List<Boolean> newStationList = new ArrayList<Boolean>();
 					int count = 3;
 					Boolean bool;
-					while(stationIterator.hasNext()){
+					while (stationIterator.hasNext()) {
 						bool = stationIterator.next();
-						if(count == col){
-							qDatabase.updateStationRecord(this.familyNumber, (String) columnNames.toArray()[col], listDate, (Boolean) value);
+						if (count == col) {
+							qDatabase.updateStationRecord(this.familyNumber,
+									(String) columnNames.toArray()[col],
+									listDate, (Boolean) value);
 							newStationList.add((Boolean) value);
 							System.out.println(columnNames.toArray()[col]);
-							
-						}
-						else{
-							newStationList.add(bool); 
+
+						} else {
+							newStationList.add(bool);
 						}
 						count++;
 					}
 					this.stations.clear();
 					this.stations = newStationList;
 				}
-			} 
-		}		
-	}
-	
-	WaitTableModel(Connection conn){
-		this.qDatabase = new WaitTableModelQueries(conn);
-		refeshList();	
+			}
+		}
 	}
 
-	public void refeshList(){
-		
+	WaitTableModel(Connection conn) {
+		this.qDatabase = new WaitTableModelQueries(conn);
+		refeshList();
+	}
+
+	public void refeshList() {
+
 		List<String> stationNames = new ArrayList<String>();
-		
-		//Titles of the columns in the list
+
+		// Titles of the columns in the list
 		this.columnNames.clear();
 		columnNames.add("Order");
 		columnNames.add("Name");
@@ -129,67 +132,69 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 		try {
 			listDate = getTodaysDate();
 			stationNames = qDatabase.getStations(this.listDate);
-			if(stationNames != null){
+			if (stationNames != null) {
 				Iterator<String> stationNameIterator = stationNames.iterator();
-				while(stationNameIterator.hasNext()){
+				while (stationNameIterator.hasNext()) {
 					columnNames.add(stationNameIterator.next());
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//What are we going to do about errors?
 			e.printStackTrace();
 		}
-		
-		//Data populating this list
+
+		// Data populating this list
 		this.listData.clear();
 		try {
 			List<Integer> numbers = new ArrayList<Integer>();
 			numbers = qDatabase.getListFromVisitPanty(listDate);
-			if(numbers != null){
+			if (numbers != null) {
 				Iterator<Integer> numbersIterator = numbers.iterator();
-				while(numbersIterator.hasNext()){
-					
-					
+				while (numbersIterator.hasNext()) {
+
 					int familyNumber = numbersIterator.next();
 					int orderNumber = numbersIterator.next();
-					//String LastName = database.getFamilyLastName(familyNumber);
-					
-					//Get Station Check List.
+					// String LastName =
+					// database.getFamilyLastName(familyNumber);
+
+					// Get Station Check List.
 					List<Boolean> stationCheck = new ArrayList<Boolean>();
 					List<String> station = new ArrayList<String>();
-					station = qDatabase.getStationsFamilyVisit(listDate, familyNumber);
-					if(stationNames != null && station != null){
-						Iterator<String> stationNameIterator = stationNames.iterator();
-						while(stationNameIterator.hasNext()){
+					station = qDatabase.getStationsFamilyVisit(listDate,
+							familyNumber);
+					if (stationNames != null && station != null) {
+						Iterator<String> stationNameIterator = stationNames
+								.iterator();
+						while (stationNameIterator.hasNext()) {
 							boolean check = false;
 							String stationName = stationNameIterator.next();
-							Iterator<String> stationIterator = station.iterator();
-							while(stationIterator.hasNext()){
-								if(stationName.compareTo(stationIterator.next()) == 0)
+							Iterator<String> stationIterator = station
+									.iterator();
+							while (stationIterator.hasNext()) {
+								if (stationName.compareTo(stationIterator
+										.next()) == 0)
 									check = true;
 							}
 							stationCheck.add(check);
 						}
 					}
-					
-					ListData data = new ListData(orderNumber, familyNumber, stationCheck);
+
+					ListData data = new ListData(orderNumber, familyNumber,
+							stationCheck);
 					listData.add(data);
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.fireTableDataChanged();
 	}
-	
+
 	/**
 	 * Return the number of columns.
 	 */
 	@Override
 	public int getColumnCount() {
-		if(columnNames != null)
+		if (columnNames != null)
 			return columnNames.size();
 		else
 			return 0;
@@ -200,9 +205,9 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	 */
 	@Override
 	public int getRowCount() {
-		if(listData != null)
+		if (listData != null)
 			return listData.size();
-		else 
+		else
 			return 0;
 	}
 
@@ -221,12 +226,12 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	@Override
 	public Object getValueAt(int row, int col) {
 		ListData data = (ListData) listData.toArray()[row];
-		return data.getColumn(col) ;
+		return data.getColumn(col);
 	}
 
 	/**
-	 * Return the class type of the column data.
-	 * Necessary to let the checkboxes display instead of the boolean values
+	 * Return the class type of the column data. Necessary to let the checkboxes
+	 * display instead of the boolean values
 	 */
 	@Override
 	public Class<?> getColumnClass(int c) {
@@ -234,13 +239,12 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	}
 
 	/**
-	 * Checks to see if the cell is editable.
-	 * Allow the last three columns, which should be the checkboxes,
-	 * to be editable
+	 * Checks to see if the cell is editable. Allow the last three columns,
+	 * which should be the checkboxes, to be editable
 	 */
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		if(col < this.getColumnCount()-3 ) {
+		if (col < this.getColumnCount() - 3) {
 			return false;
 		} else {
 			return true;
@@ -248,8 +252,8 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	}
 
 	/**
-	 * Sets the value at the given location to the given value.
-	 * Necessary for the editing of the checkboxes.
+	 * Sets the value at the given location to the given value. Necessary for
+	 * the editing of the checkboxes.
 	 */
 	@Override
 	public void setValueAt(Object value, int row, int col) {
@@ -264,20 +268,18 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	 */
 	@Override
 	public void reorder(int fromIndex, int toIndex) {
-		//TODO needs more testing, this broke and duplicated a row -JB
 		if (toIndex > fromIndex) {
 			listData.add(toIndex, listData.get(fromIndex));
 			listData.remove(fromIndex);
 		} else {
 			listData.add(toIndex, listData.get(fromIndex));
-			listData.remove(fromIndex+1);
-			
-			
+			listData.remove(fromIndex + 1);
+
 		}
 		this.fireTableDataChanged();
 	}
-	
-	public Date getTodaysDate(){
+
+	public Date getTodaysDate() {
 		java.util.Date date = new java.util.Date();
 		java.sql.Date todaysDate = new java.sql.Date(date.getTime());
 		System.out.println("Today's Date::" + todaysDate);
