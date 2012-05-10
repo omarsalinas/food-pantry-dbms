@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,20 +23,24 @@ import javax.swing.border.LineBorder;
 import org.foodpantry.db.DBConnection;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditFamilyUI extends JFrame implements ActionListener{
 		
 		private static final long serialVersionUID = 1L;
-		static JTextField lastNameTF;
-		static JTextField primaryFirstNameTF;
-		static JTextField noAdultsTF;
-		static JTextField noChildrenTF;
-		static JTextField houseNumberTF;
-		static JTextField streetTF;
-		static JTextField cityTF;
-		static JTextField stateTF;
-		static JTextField zipTF;
+		static JTextField lastNameTF = new JTextField(20);;
+		static JTextField primaryFirstNameTF = new JTextField(20);
+		static JTextField noAdultsTF = new JTextField(20);
+		static JTextField noChildrenTF = new JTextField(20);
+		static JTextField houseNumberTF = new JTextField(20);
+		static JTextField streetTF = new JTextField(20);
+		static JTextField cityTF = new JTextField(20);
+		static JTextField stateTF = new JTextField(20);
+		static JTextField zipTF = new JTextField(20);
 		
+		static List<String []> addressList = new ArrayList<String []>();	
+		static List<String> dropdownAddrList = new ArrayList<String>();
 		static Connection conn;
 		static java.sql.Date todaysDate = new java.sql.Date(System.currentTimeMillis());
 		static JFrame frame;
@@ -56,11 +59,13 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 			Container pane = this.getContentPane();
 			
 			// Set JFrame Configuration
-			this.setTitle("Add New Family");
+			this.setTitle("Edit Family");
 			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 			DBConnection dbConn	= new DBConnection();
 			conn = dbConn.getDBConnection();
+			
+			refreshFamilyInfo();
 
 			//set parent pane to springlayout
 			SpringLayout layout = new SpringLayout();
@@ -113,11 +118,55 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 		 */
 		private static JPanel createStatusPane() {
 			JPanel statusPane = new JPanel();
-			JLabel text = new JLabel("Add the new family information here:");
+			JLabel text = new JLabel("Edit the family information here:");
 
 			statusPane.add(text);
 		
 			return statusPane; 
+		}
+		
+		private static void refreshFamilyInfo(){
+			
+			// TODO get family number
+			int familyNumber = 1;
+			
+			PreparedStatement selectStatement;
+			ResultSet resultSet;
+			
+			String querySQL = "SELECT Last_Name, Primary_Name, No_Children, No_Adults FROM Family WHERE Family_Number = ?";
+			try {
+				selectStatement = conn.prepareStatement(querySQL);
+				selectStatement.setInt(1, familyNumber);
+				resultSet = selectStatement.executeQuery();
+				if(resultSet.next()){
+					lastNameTF.setText(resultSet.getString("Last_Name"));
+					primaryFirstNameTF.setText(resultSet.getString("Primary_Name"));
+					noAdultsTF.setText(resultSet.getString("No_Adults"));
+					noChildrenTF.setText(resultSet.getString("No_Children"));
+				}
+				
+				querySQL = "SELECT House_Number, Street, City, State, Zip, Current FROM Family_Address WHERE Family_Number = ?";
+				selectStatement = conn.prepareStatement(querySQL);
+				selectStatement.setInt(1, familyNumber);
+				resultSet = selectStatement.executeQuery();
+				while(resultSet.next()){
+					String houseNum = resultSet.getString("House_Number");
+					String street = resultSet.getString("Street");
+			        String[] addr = {
+			        		houseNum,
+			        		street, 
+			        		resultSet.getString("City"),
+			        		resultSet.getString("State"),
+			        		resultSet.getString("Zip"),
+			        		resultSet.getString("Current")
+			       };
+			        addressList.add(addr);
+			        dropdownAddrList.add(houseNum + " " + street);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		private static JPanel createSaveOrCancel(){
@@ -244,8 +293,7 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(lastName, cs);
 
-	        lastNameTF = new JTextField(20);
-	        lastNameTF.setText("test");
+	        // TODO lastNameTF.setText("test");
 	        cs.gridx = 1;
 	        cs.gridy = 0;
 	        cs.gridwidth = 1;
@@ -260,7 +308,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(primaryFirstName, cs);
 
-	        primaryFirstNameTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 1;
 	        cs.gridwidth = 1;
@@ -276,7 +323,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(noAdults, cs);
 
-	        noAdultsTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 2;
 	        cs.gridwidth = 1;
@@ -292,7 +338,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(noChildren, cs);
 
-	        noChildrenTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 3;
 	        cs.gridwidth = 1;
@@ -308,13 +353,9 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(addresses, cs);
 	        
-	        String[] example = {
-	                "one",
-	                "two",
-	                "new address"
-	       };
+	       // dropdownAddrList
 
-		    JComboBox addressDropDown = new JComboBox(example);
+		    JComboBox addressDropDown = new JComboBox(dropdownAddrList.toArray());
 		    addressDropDown.setEditable(true);
 		    addressDropDown.addActionListener(new AddressComboBoxListener());
 	        cs.gridx = 1;
@@ -332,7 +373,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(houseNumber, cs);
 
-	        houseNumberTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 5;
 	        cs.gridwidth = 1;
@@ -348,7 +388,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(street, cs);
 
-	        streetTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 6;
 	        cs.gridwidth = 1;
@@ -364,7 +403,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(city, cs);
 
-	        cityTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 7;
 	        cs.gridwidth = 1;
@@ -381,7 +419,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(state, cs);
 
-	        stateTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 8;
 	        cs.gridwidth = 1;
@@ -397,7 +434,6 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 	        cs.gridwidth = 1;
 	        familyPanel.add(zip, cs);
 
-	        zipTF = new JTextField(20);
 	        cs.gridx = 1;
 	        cs.gridy = 9;
 	        cs.gridwidth = 1;
@@ -440,4 +476,13 @@ public class EditFamilyUI extends JFrame implements ActionListener{
 			// TODO Auto-generated method stub
 			
 		}
+}
+
+class AddressComboBoxListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		System.out.println(((JComboBox) e.getSource()).getSelectedItem());
+	}
+	
 }
