@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.swing.table.AbstractTableModel;
 
+@SuppressWarnings("serial")
 public class AdminTableModel extends AbstractTableModel {
 
 	/**
