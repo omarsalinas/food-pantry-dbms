@@ -6,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -131,23 +134,66 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener 
 		return pane; 
 	}
 	
-	private void setFamilyIDs() {
+	/**
+	 * Finds all the selected rows and adds those families to the waitlist.
+	 */
+	private void addFamiliesToWaitlist() {
+		/*
+		 * The SQL statement should read something like:
+		 * INSERT INTO Visit_Pantry
+		 * VALUES (today, fam#, time, #inLine),
+		 * VALUES (today, fam#, time, #inLine);
+		 */
+		String sql = "INSERT INTO Visit_Pantry VALUES ";
+		
+		// Create Current Date String
+		Date todayDate = new Date();
+		DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
+		String currDate = dateFormatter.format(todayDate);
+		
+		// Create Current Time String
+		DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+		String currTime = timeFormatter.format(todayDate);
+		
+		// Get the current total of families on the waiting list, and set that
+		// as the first family's number in line, increasing for each additional
+		// family
+		int numberInLine = MainUI.model.getRowCount();
+		
+		// boolean that should indicate if something is selected, and thus
+		// the sql statement should be executed
+		boolean selectionExists = false;
+		
+		// Iterate over the list of families and put the selection(s) on the waitlist
 		for (int i=0 ; i<this.model.getRowCount(); i++) {
+			// if a row was selected, append to the sql statement
 			if ((Boolean)this.model.getValueAt(i, 0) == true ) {
-				this.familyIDs.add((Integer)this.model.getValueAt(i, 1));
+				// once a selection is found, all following will need a comma
+				// prepended
+				if (selectionExists) {
+					sql += ",";
+				} else {
+					selectionExists = true;
+				}
+				
+				String values = "(" + "'" + currDate + "'" + "," + 
+								(Integer)this.model.getValueAt(i, 1) + "," +
+								"'" + currTime + "'" + "," + numberInLine++ + ") ";
+				sql += values;
 			}
 		}
-		/*
-		 * INSERT INTO Visit_Pantry
-		 * VALUES (value, value),
-		 * VALUES (value, value);
-		 */
-		String sql = "INSERT INTO ";
+		
+		// close the sql statement
+		sql += ";";
+		
+		// try to execute the sql statement
 		try {
-			MainUI.dbConnection.connection.prepareStatement(sql).execute();
+			if (selectionExists) {
+				MainUI.dbConnection.connection.prepareStatement(sql).execute();
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println("SelectFamilyForWaitlistUI: Failed to execute query");
+			System.out.println(sql);
 			e.printStackTrace();
 		}
 	}
@@ -163,12 +209,7 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener 
 			window.pack();
 			window.setVisible(true);
 		} else if (e.getActionCommand().equals("Add Selection")) {
-			this.setFamilyIDs();
-			for(int i : familyIDs) {
-				if ( i != 0) {
-					System.out.println(i);
-				}
-			}
+			this.addFamiliesToWaitlist();
 			this.dispose();
 		}
 	}
