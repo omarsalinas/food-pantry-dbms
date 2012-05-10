@@ -1,6 +1,7 @@
 package org.foodpantry.ui;
 
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -259,6 +260,11 @@ public class AdminUI {
 						  System.out.println("Modifying user FAILED" + s.toString());
 					}
 				}
+				// display error say a user name must be entered to delete
+				JOptionPane.showMessageDialog(
+						modifyUserButton, "Modify Complete!",
+					    "Success",
+					    JOptionPane.INFORMATION_MESSAGE);
 				modifyframe.dispose();
 			}
 		});
@@ -288,9 +294,8 @@ public class AdminUI {
 	}
 
  	private static void addButtonsToPane(final Container pane) {
-		//set parent pane to spring layout
-		SpringLayout layout = new SpringLayout();
-		pane.setLayout(layout);
+		//set parent pane to flow layout
+		pane.setLayout(new FlowLayout());
 
 		// Add  user button
 		final JButton addButton = new JButton("Add User");
@@ -342,32 +347,5 @@ public class AdminUI {
 			}
 		});
 		pane.add(modifyButton);
-			
-		// Standard padding for the elements
-		int padding = 5;
-		// constraints on the placement of the status bar
-		layout.putConstraint(SpringLayout.WEST, addButton,
-				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, addButton,
-				 padding,SpringLayout.NORTH, pane);
-		
-		layout.putConstraint(SpringLayout.WEST, deleteButton,
-				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, deleteButton,
-				 padding,SpringLayout.SOUTH, addButton);
-		
-		layout.putConstraint(SpringLayout.WEST, modifyButton,
-				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, modifyButton,
-				 padding,SpringLayout.SOUTH, deleteButton);
-		
-		
-		// Constrain the pane to the internal elements
-		layout.putConstraint(SpringLayout.SOUTH, pane,
-				 padding, SpringLayout.SOUTH, modifyButton);
-		layout.putConstraint(SpringLayout.EAST, pane,
-				 padding, SpringLayout.EAST, deleteButton);
 	}
-
-	
 }
