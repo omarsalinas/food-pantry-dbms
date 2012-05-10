@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,6 +30,7 @@ public class AdminUI {
 	private static String insertStmt = null;
 	private static Statement stmt = null;
 	private static JFrame modifyframe;
+	private static JFrame stationFrame;
 	
 	public AdminUI(){
 		createAndShowGUI();
@@ -268,6 +272,57 @@ public class AdminUI {
 		return modifyUserPane;
 	}
 	
+	/**
+	 * Add stations to the 
+	 * @return JPanel addStationsPane
+	 */
+	private static JPanel addStations() {
+		final JPanel addStationsPane = new JPanel();
+		
+		//Add Stations Label
+		JLabel addLabel = new JLabel();
+		addLabel.setText("Add a Station");
+		addStationsPane.add(addLabel);
+		
+		// Add Stations text field
+		final JTextField addTextField = new JTextField(10);
+		addTextField.setToolTipText("Add a Station");
+		addStationsPane.add(addTextField);
+		
+		// Add Stations button
+		JButton addStationsButton = new JButton("Add Station");
+		addStationsPane.add(addStationsButton);
+		addStationsButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				// INSERT INTO `C242386_foodpantry`.`Station` (`S_Name`, `Date_Visited`) VALUES ('Frig', '2012-05-10');
+				
+				// Create Current Date String
+				Date todayDate = new Date();
+				DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+				
+				String sql = "INSERT INTO `C242386_foodpantry`.`Station` (`S_Name`, `Date_Visited`) VALUES ('";
+				sql += addTextField.getText() + "', '" +  dateFormatter.format(todayDate);
+				sql += "');";
+				
+				try {
+					MainUI.dbConnection.connection.prepareStatement(sql).execute();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Error adding station.");
+					System.out.println(sql);
+					e.printStackTrace();
+				}
+				AdminUI.stationFrame.dispose();
+				MainUI.model.fireTableStructureChanged();
+			}
+		});
+		
+		return addStationsPane;
+	}
+	
 	public static void main(String[] args) {
 		// Invoke the thread with 
 		// Create and show the main GUI
@@ -344,5 +399,22 @@ public class AdminUI {
 			}
 		});
 		pane.add(modifyButton);
+		
+		// Add Stations button
+		final JButton stationButton = new JButton("Add Station");
+		stationButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Add the station pane
+				// Create and set up the window.
+				stationFrame = new JFrame("Add Station");
+				stationFrame.add(AdminUI.addStations());
+				// Display the window.
+				stationFrame.pack();
+				stationFrame.setVisible(true);
+			}
+		});
+		pane.add(stationButton);
 	}
 }
