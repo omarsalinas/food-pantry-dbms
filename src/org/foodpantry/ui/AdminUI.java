@@ -28,7 +28,7 @@ public class AdminUI {
 
 	private static String insertStmt = null;
 	private static Statement stmt = null;
-
+	private static JFrame modifyframe;
 	
 	public AdminUI(){
 		createAndShowGUI();
@@ -259,6 +259,7 @@ public class AdminUI {
 						  System.out.println("Modifying user FAILED" + s.toString());
 					}
 				}
+				modifyframe.dispose();
 			}
 		});
 		return modifyUserPane;
@@ -333,11 +334,11 @@ public class AdminUI {
 			public void actionPerformed(ActionEvent arg0) {
 				// Add the delete user pane
 				// Create and set up the window.
-				JFrame frame = new JFrame("Modifying User");
-				frame.add(AdminUI.adminModifyUserPane());
+				modifyframe = new JFrame("Modifying User");
+				modifyframe.add(AdminUI.adminModifyUserPane());
 				// Display the window.
-				frame.pack();
-				frame.setVisible(true);
+				modifyframe.pack();
+				modifyframe.setVisible(true);
 			}
 		});
 		pane.add(modifyButton);
