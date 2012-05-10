@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -239,7 +240,7 @@ public class AdminUI {
 		modifyLabel.setText("Modify User:");
 		modifyUserPane.add(modifyLabel);
 		
-		modifyUserPane.add(rst);
+		modifyUserPane.add(new JScrollPane(rst));
 		
 		return modifyUserPane;
 	}
