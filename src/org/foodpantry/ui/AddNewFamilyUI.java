@@ -421,12 +421,3 @@ public class AddNewFamilyUI extends JFrame implements ActionListener{
 	}
 	
 }
-
-class AddressComboBoxListener implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		System.out.println("HERE");
-	}
-	
-}
