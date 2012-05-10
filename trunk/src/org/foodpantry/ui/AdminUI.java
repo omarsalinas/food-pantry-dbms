@@ -290,33 +290,41 @@ public class AdminUI {
 		addStationsPane.add(addTextField);
 		
 		// Add Stations button
-		JButton addStationsButton = new JButton("Add Station");
+		final JButton addStationsButton = new JButton("Add Station");
 		addStationsPane.add(addStationsButton);
 		addStationsButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				// INSERT INTO `C242386_foodpantry`.`Station` (`S_Name`, `Date_Visited`) VALUES ('Frig', '2012-05-10');
+				if (addTextField.getText() != null && addTextField.getText().trim().length() != 0) {
+					// Create Current Date String
+					Date todayDate = new Date();
+					DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+					
+					String sql = "INSERT INTO `C242386_foodpantry`.`Station` (`S_Name`, `Date_Visited`) VALUES ('";
+					sql += addTextField.getText() + "', '" +  dateFormatter.format(todayDate);
+					sql += "');";
+					
+					try {
+						MainUI.dbConnection.connection.prepareStatement(sql).execute();
+					} catch (SQLException e) {
+						System.out.println("Error adding station.");
+						System.out.println(sql);
+						e.printStackTrace();
+					}
+					AdminUI.stationFrame.dispose();
+					MainUI.model.refeshList();
+					// TODO may not need these calls ... need to check
+					MainUI.model.fireTableDataChanged();
+					MainUI.model.fireTableStructureChanged();
 				
-				// Create Current Date String
-				Date todayDate = new Date();
-				DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-				
-				String sql = "INSERT INTO `C242386_foodpantry`.`Station` (`S_Name`, `Date_Visited`) VALUES ('";
-				sql += addTextField.getText() + "', '" +  dateFormatter.format(todayDate);
-				sql += "');";
-				
-				try {
-					MainUI.dbConnection.connection.prepareStatement(sql).execute();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					System.out.println("Error adding station.");
-					System.out.println(sql);
-					e.printStackTrace();
+				}else {
+					// display error say a user name must be entered to delete
+					System.err.println("Username cannot be blank");
+					JOptionPane.showMessageDialog(
+						    addStationsButton, "Username must be entered to delete a new user.",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
-				AdminUI.stationFrame.dispose();
-				MainUI.model.fireTableStructureChanged();
 			}
 		});
 		
