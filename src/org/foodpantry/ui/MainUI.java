@@ -106,7 +106,7 @@ public class MainUI {
 		// Create and setup a scrollpane, and add the table to it
 		JScrollPane scrollPane = new JScrollPane(waitTable);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(
-				scrollPane.getBorder(), "Waitlist",
+				scrollPane.getBorder(), "Waitlist  -  Date: " + todaysDate,
 				TitledBorder.LEFT, TitledBorder.TOP));
 		
 		// Add the scrollpane to the content pane
@@ -182,8 +182,11 @@ public class MainUI {
 			insertStatement.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			// TODO there will be duplicate entries.....
-			//e.printStackTrace();
+			if(e.getErrorCode() == 1062){
+				//the date is a duplicate
+			}
+			else
+				e.printStackTrace();
 		}
 		
 		statusPane.add(connection);
