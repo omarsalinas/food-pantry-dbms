@@ -41,7 +41,7 @@ public class AdminTableModel extends AbstractTableModel {
 				int row = result.getRow() - 1;
 				this.data[row][0] = result.getString(1);
 				this.data[row][1] = result.getString(2);
-				this.data[row][2] = result.getInt(3);
+				this.data[row][2] = result.getBoolean(3);
 			}
 		} catch (SQLException e) {
 			System.out.println("AdminUI Table Model SQL Query Failed");
@@ -77,6 +77,14 @@ public class AdminTableModel extends AbstractTableModel {
 		
 		return true; 
 	}
+	
+	/**
+	 * Overrides parent function.  Necessary for boolean value to render properly
+	 */
+	@Override
+	public Class<?> getColumnClass(int c) {
+        return getValueAt(0, c).getClass();
+    }
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
