@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.ParseException;
 
 import javax.swing.BorderFactory;
@@ -52,6 +54,8 @@ public class MainUI {
 	private static String username;
 	
 	protected static DBConnection dbConnection;
+	
+	static java.sql.Date todaysDate = new java.sql.Date(System.currentTimeMillis());
 	
 	/**
 	 * Add all of the components to the pane to create the main GUI.
@@ -166,6 +170,20 @@ public class MainUI {
 		}
 		else{
 			connection = new JLabel("  The Connection is disabled  ");			
+		}
+		
+		Connection conn = dbConnection.getDBConnection();
+		
+		try {
+			PreparedStatement insertStatement = null;
+			String insertSQL = "INSERT INTO Pantry_Dates (Date_Visited) VALUES (?)";
+			insertStatement = conn.prepareStatement(insertSQL);
+			insertStatement.setDate(1, todaysDate);
+			insertStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			// TODO there will be duplicate entries.....
+			//e.printStackTrace();
 		}
 		
 		statusPane.add(connection);
