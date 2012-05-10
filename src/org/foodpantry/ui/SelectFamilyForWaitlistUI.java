@@ -41,7 +41,7 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener 
 	 */
 	ArrayList<Integer> familyIDs = new ArrayList<Integer>();
 
-	FamilyTableModel model;
+	protected static FamilyTableModel model;
 
 	/**
 	 * Constructs and adds all needed elements.  Also, packs the frame.
