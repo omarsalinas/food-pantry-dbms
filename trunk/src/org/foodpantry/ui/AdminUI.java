@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -16,8 +17,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.border.TitledBorder;
 
 import org.foodpantry.db.DBConnection;
 
@@ -212,36 +215,13 @@ public class AdminUI {
 	 */
 	private static JPanel adminModifyUserPane() {
 		JPanel modifyUserPane = new JPanel();
-		
-		// Query to populate the table
-		String getUsers = "SELECT * FROM Pantry_Security";
-
-		// Get connection to database from MainUI
-		DBConnection conn = MainUI.dbConnection;
-
-		//Result set to store data
-		ResultSet rs = null;
-		ResultSetTable rst = null;
-		
-		// proceed only if connection was successful
-		if (conn.Success) {
-			// execute delete
-			try {
-				stmt = conn.getDBConnection().createStatement();
-				rs = stmt.executeQuery(getUsers);
-				rst = new ResultSetTable(rs);
-			} catch (SQLException s) {
-				  System.out.println("Error getting admin users" + s.toString());
-			}
-		}
-		
-		// Add administrator label
-		JLabel modifyLabel = new JLabel();
-		modifyLabel.setText("Modify User:");
-		modifyUserPane.add(modifyLabel);
-		
-		modifyUserPane.add(new JScrollPane(rst));
-		
+		AdminTableModel model = new AdminTableModel();
+		JTable table = new JTable(model);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBorder(BorderFactory.createTitledBorder(
+				scrollPane.getBorder(), "Modify Users",
+				TitledBorder.LEFT, TitledBorder.TOP));
+		modifyUserPane.add(scrollPane);
 		return modifyUserPane;
 	}
 	
