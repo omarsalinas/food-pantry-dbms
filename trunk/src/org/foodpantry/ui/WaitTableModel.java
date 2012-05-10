@@ -262,6 +262,7 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 	 */
 	@Override
 	public void reorder(int fromIndex, int toIndex) {
+		//TODO needs more testing, this broke and duplicated a row -JB
 		listData.add(toIndex, listData.get(fromIndex));
 		listData.remove(fromIndex);
 	}
