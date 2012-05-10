@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
