@@ -209,12 +209,8 @@ public class AdminUI {
 	/**
 	 * Create a pane that allows users to be modified
 	 */
-	private static ResultSetTable adminModifyUserPane() {
+	private static JPanel adminModifyUserPane() {
 		JPanel modifyUserPane = new JPanel();
-		
-		String[] columnNames = {"Username",
-                "Password",
-                "Administrator"};		
 		
 		// Query to populate the table
 		String getUsers = "SELECT * FROM Pantry_Security";
@@ -233,28 +229,19 @@ public class AdminUI {
 				stmt = conn.getDBConnection().createStatement();
 				rs = stmt.executeQuery(getUsers);
 				rst = new ResultSetTable(rs);
-				
-//				// Get metadata on result
-//				metadata = rs.getMetaData();       
-//				// How many columns?
-//				numcols = metadata.getColumnCount();
-//				// How many rows?
-//				numrows = rs.getRow();             
-//				rs.next();
-//				
-//				while( ! rs.isAfterLast() ){
-//					System.out.println(rs.getString("User_Name").toString());
-//					rs.next();
-//				}
-				
-				
 			} catch (SQLException s) {
 				  System.out.println("Error getting admin users" + s.toString());
 			}
 		}
 		
+		// Add administrator label
+		JLabel modifyLabel = new JLabel();
+		modifyLabel.setText("Modify User:");
+		modifyUserPane.add(modifyLabel);
 		
-		return rst;
+		modifyUserPane.add(rst);
+		
+		return modifyUserPane;
 	}
 	
 	public static void main(String[] args) {
@@ -273,52 +260,93 @@ public class AdminUI {
 		JFrame frame = new JFrame("Administrative Services");
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Set up the content pane.
-		addComponentsToPane(frame.getContentPane());
+		addButtonsToPane(frame.getContentPane());
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-	private static void addComponentsToPane(Container pane) {
-		//set parent pane to springlayout
+ 	private static void addButtonsToPane(final Container pane) {
+		//set parent pane to spring layout
 		SpringLayout layout = new SpringLayout();
 		pane.setLayout(layout);
 
-		// Add add user pane
-		JPanel addUser = AdminUI.adminAddUserPane();
-		pane.add(addUser);
+		// Add  user button
+		final JButton addButton = new JButton("Add User");
+		addButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Add the add user pane
+				// Create and set up the window.
+				JFrame frame = new JFrame("Adding User");
+				frame.add(AdminUI.adminAddUserPane());
+				// Display the window.
+				frame.pack();
+				frame.setVisible(true);
+			}
+		});
+		pane.add(addButton);
+		
+		// Delete  user button
+		final JButton deleteButton = new JButton("Delete User");
+		deleteButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Add the delete user pane
+				// Create and set up the window.
+				JFrame frame = new JFrame("Deleting User");
+				frame.add(AdminUI.adminDeleteUserPane());
+				// Display the window.
+				frame.pack();
+				frame.setVisible(true);
+			}
+		});
+		pane.add(deleteButton);
 
-		// Add delete user pane
-		JPanel deleteUser = AdminUI.adminDeleteUserPane();
-		pane.add(deleteUser);
-		
-		// Add delete user pane
-		ResultSetTable modifyUser = AdminUI.adminModifyUserPane();
-		pane.add(modifyUser);
-		
+		// Modify  user button
+		final JButton modifyButton = new JButton("Modify User");
+		modifyButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Add the delete user pane
+				// Create and set up the window.
+				JFrame frame = new JFrame("Modifying User");
+				frame.add(AdminUI.adminModifyUserPane());
+				// Display the window.
+				frame.pack();
+				frame.setVisible(true);
+			}
+		});
+		pane.add(modifyButton);
+			
 		// Standard padding for the elements
 		int padding = 5;
 		// constraints on the placement of the status bar
-		layout.putConstraint(SpringLayout.WEST, addUser,
+		layout.putConstraint(SpringLayout.WEST, addButton,
 				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, addUser,
+		layout.putConstraint(SpringLayout.NORTH, addButton,
 				 padding,SpringLayout.NORTH, pane);
 		
-		layout.putConstraint(SpringLayout.WEST, deleteUser,
+		layout.putConstraint(SpringLayout.WEST, deleteButton,
 				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, deleteUser,
-				 padding,SpringLayout.SOUTH, addUser);
+		layout.putConstraint(SpringLayout.NORTH, deleteButton,
+				 padding,SpringLayout.SOUTH, addButton);
 		
-		layout.putConstraint(SpringLayout.WEST, modifyUser,
+		layout.putConstraint(SpringLayout.WEST, modifyButton,
 				 padding,SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, modifyUser,
-				 padding,SpringLayout.SOUTH, deleteUser);
+		layout.putConstraint(SpringLayout.NORTH, modifyButton,
+				 padding,SpringLayout.SOUTH, deleteButton);
 		
 		
 		// Constrain the pane to the internal elements
 		layout.putConstraint(SpringLayout.SOUTH, pane,
-				 padding, SpringLayout.SOUTH, modifyUser);
+				 padding, SpringLayout.SOUTH, modifyButton);
 		layout.putConstraint(SpringLayout.EAST, pane,
-				 padding, SpringLayout.EAST, addUser);
+				 padding, SpringLayout.EAST, deleteButton);
 	}
+
+	
 }
