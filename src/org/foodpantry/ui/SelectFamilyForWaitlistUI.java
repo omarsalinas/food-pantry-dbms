@@ -116,7 +116,8 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener 
 		pane.add(addSelectionBtn);
 
 		JButton addNewFamilyBtn = new JButton("Create Family");
-		addNewFamilyBtn.addActionListener(new openWindow());
+		//addNewFamilyBtn.addActionListener(new openWindow());
+		addNewFamilyBtn.addActionListener(this);
 		addNewFamilyBtn.setActionCommand("Add New Family");
 		addNewFamilyBtn.setMnemonic(KeyEvent.VK_C);
 		pane.add(addNewFamilyBtn);
@@ -154,9 +155,13 @@ public class SelectFamilyForWaitlistUI extends JFrame implements ActionListener 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Add New Family")) {
-			AddNewFamilyUI window = new AddNewFamilyUI();
+			JFrame window = new AddNewFamilyUI();
+			window.pack();
+			window.setVisible(true);
 		} else if (e.getActionCommand().equals("Edit Family")) {
-			//TODO have something for editing family information
+			JFrame window = new EditFamilyUI();
+			window.pack();
+			window.setVisible(true);
 		} else if (e.getActionCommand().equals("Add Selection")) {
 			this.setFamilyIDs();
 			for(int i : familyIDs) {
