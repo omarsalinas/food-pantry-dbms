@@ -256,6 +256,7 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 		ListData data = (ListData) listData.toArray()[row];
 		data.setColumn(col, value);
 		listData.toArray()[row] = data;
+		this.fireTableDataChanged();
 	}
 
 	/**
@@ -266,6 +267,7 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 		//TODO needs more testing, this broke and duplicated a row -JB
 		listData.add(toIndex, listData.get(fromIndex));
 		listData.remove(fromIndex);
+		this.fireTableDataChanged();
 	}
 	
 	public Date getTodaysDate(){
