@@ -142,6 +142,7 @@ public class WaitTableModel extends AbstractTableModel implements Reorderable {
 		}
 		
 		//Data populating this list
+		this.listData.clear();
 		try {
 			List<Integer> numbers = new ArrayList<Integer>();
 			numbers = qDatabase.getListFromVisitPanty(listDate);
